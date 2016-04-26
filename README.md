@@ -1,2 +1,2 @@
-# godillustrator
-ワンドロ補助ソフト
+# GodUploader
+お絵かき勢が利用するアップローダーです。

@@ -9,6 +9,7 @@
 /test/version_tmp/
 /tmp/
 /public/sessions/*
+/spec/examples.txt
 
 ## Specific to RubyMotion:
 .dat*
@@ -21,7 +22,7 @@ build/
 /doc/
 /rdoc/
 
-## Environment normalisation:
+## Environment normalization:
 /.bundle/
 /vendor/bundle
 /lib/bundler/man/
