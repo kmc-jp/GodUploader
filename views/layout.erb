@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>God Illustrator Creator</title>
+   
+  <!-- Bootstrap core CSS -->
+  <link href="<%= uri('css/bootstrap.min.css',false) %>" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="<%= uri('css/starter-template.css',false) %>" rel="stylesheet">
+  <link href="<%= uri('css/sticky-footer.css',false) %>" rel="stylesheet">
+  <link href="<%= uri('css/topjumbotron.css',false) %>" rel="stylesheet">
+
+  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js',false) %>"></script><![endif]-->
+  <script src="<%= uri('js/ie-emulation-modes-warning.js',false) %>"></script>
+
+  <script type="text/javascript" src="<%= uri('js/jquery-1.11.3.min.js',false) %>"></script>
+  <script type="text/javascript" src="<%= uri('js/moment.js',false) %>"></script>
+  <script type="text/javascript" src="<%= uri('js/bootstrap.min.js',false) %>"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="<%= uri('js/ie10-viewport-bug-workaround.js',false) %>"></script>
+</head>
+<body>
+<!-- 1.ナビゲーションバーの設定 -->
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <!-- 2.ヘッダ情報 -->
+      <div class="navbar-header">
+        <a class="navbar-brand" href="<%= uri("/",false) %>" >ワンドロ支援ソフト God Illustrator Creater</a>
+      </div>
+    </div> 
+  </nav>
+  
+  <%== yield %>
+  
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">Copyright(C)　2015- Kata. All rights reserved.</p>
+      <p class="text-muted">効果音:<a href="http://pansound.com/panicpumpkin/" target="_blank">PANICPUMPKIN</a></p>
+    </div>
+  </footer>
+</body>
+</html>

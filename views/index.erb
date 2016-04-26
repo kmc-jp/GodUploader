@@ -1,0 +1,57 @@
+<div class="container">
+
+  <div class="panel panel-default">
+    <div class="panel-body">  
+      <div class="row-fluid">
+      <form method="post" action="<%= uri( '/open',false ) %>">
+          <label for="sessionname">セッション名:</label>
+          <input type="text" id="sessionname"  name="name" class="form-control" placeholder="セッション名"  required>
+          <label for="managepass" >管理パスワード:</label>
+          <input type="password" name="password" id="managepass"  class="form-control" placeholder="パスワード" required>
+
+          <button type="submit" class="btn btn-success col-md-12" >開始</a><br>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>開始前のワンドロ</p>
+    </div>
+    <div class="panel-body">
+      <div class="row-fluid">
+        <% @waitsessions.each do |s| %>
+          <a href="<%= uri( '/' + s.id.to_s ,false ) %>" type="button" class="btn btn-primary col-md-4" ><%= s.name %></a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>現在開催中のワンドロ</p>
+    </div>
+    <div class="panel-body">
+      <div class="row-fluid">
+        <% @drawingsessions.each do |s| %>
+          <a href="<%= uri( '/' + s.id.to_s ,false ) %>" type="button" class="btn btn-primary col-md-4" ><%= s.name %></a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>これまでのワンドロ結果</p>
+    </div>
+    <div class="panel-body">
+      <div class="row-fluid">
+        <% @endsessions.each do |s| %>
+          <a href="<%= uri( '/' + s.id.to_s ,false ) %>" type="button" class="btn btn-primary col-md-4" ><%= s.name %></a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</div>
