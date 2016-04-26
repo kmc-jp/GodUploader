@@ -1,0 +1,34 @@
+<script type="text/javascript" src="<%= uri( '/js/upload.js',false ) %>"></script>
+<div class="container">
+
+  <div class="jumbotron">
+    <div class="row-fluid">
+      <p>アップロード</p>
+    </div>
+  </div>
+  
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <p>画像のアップロード</p>
+    </div>     
+ 
+    <div class="panel-body" id="imageupload">
+      <div class="row-fluid">
+        <div class="input-group">
+          <button class="btn btn-default col-md-2" type="button" id="selectImage"><i class="glyphicon glyphicon-folder-open"></i></button>
+          <input id="imagecover" type="text" class="form-control col-md-10" placeholder="select file..." disabled>
+        </div>
+
+        <form method="POST" action="" enctype="multipart/form-data">
+          <input type="file" name="image" accept="image/*"  required style="display:none">
+          <button type="submit" class="btn btn-success col-md-12" >アップロード</button>
+          <%# <button type="submit" onclick="tweet(this.form, @session.id  );" class="btn btn-primary col-md-6" >tweet</button> %>
+        </form>
+      </div>
+    </div> 
+
+  </div>
+
+</div>
+

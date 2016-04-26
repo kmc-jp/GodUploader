@@ -1,0 +1,34 @@
+$(function() {
+
+  $( '#selectImage' ).on('click', function() {
+
+    $('input[name=image]').trigger('click');
+
+  });
+
+  $( 'input[name=image]' ).change(function() {
+
+    var path = $(this).val().split('\\');
+
+    $('#imagecover').val(path.pop());
+
+  });
+
+  $( '#passwordinput' ).change( function(){
+    $( 'input[name=password]' ).val( $(this).val() )
+  });
+
+  
+
+});
+
+function upload( form,id ){
+  form.action = "<%= uri( "/uploadImage/",false ) %>" + id;
+  form.submit();
+}
+
+function tweet( form,id ){
+  form.action = "<%= uri( "/tweetwithimage/",false ) %>" + id;
+  form.submit();
+}
+

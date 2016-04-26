@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>God Illustrator Creator</title>
+  <title>God Illust Uploader</title>
    
   <!-- Bootstrap core CSS -->
   <link href="<%= uri('css/bootstrap.min.css',false) %>" rel="stylesheet">
@@ -28,17 +28,24 @@
     <div class="container">
       <!-- 2.ヘッダ情報 -->
       <div class="navbar-header">
-        <a class="navbar-brand" href="<%= uri("/",false) %>" >ワンドロ支援ソフト God Illustrator Creater</a>
+        <a class="navbar-brand" href="<%= uri("/",false) %>" >KMC画像アップローダー God Illust Uploader</a>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarEexample1">
+	<ul class="nav navbar-nav">
+	  <li><a href="<%= uri("/upload",false) %>" >アップロード</a></li>
+	  <li><a href="<%= uri("/mypage",false) %>" >マイページ</a></li>
+        </ul>
       </div>
     </div> 
+
+
   </nav>
   
   <%== yield %>
   
   <footer class="footer">
     <div class="container">
-      <p class="text-muted">Copyright(C)　2015- Kata. All rights reserved.</p>
-      <p class="text-muted">効果音:<a href="http://pansound.com/panicpumpkin/" target="_blank">PANICPUMPKIN</a></p>
+      <p class="text-muted">Copyright(C)　2016- Kata. All rights reserved.</p>
     </div>
   </footer>
 </body>

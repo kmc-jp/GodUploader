@@ -1,199 +1,28 @@
 <script type="text/javascript" src="<%= uri( '/js/time.js',false ) %>"></script>
-
-<input id="isstart"type="hidden" value="<%= @session.isstart %>">
-<input id="isfinished"type="hidden"value="<%= @session.isfinished %>">
-<input id="sessionid"type="hidden"value="<%= @session.id %>">
-
 <div class="container">
 
   <div class="jumbotron">
     <div class="row-fluid">
-      <p>お題</p>
-
-      <ul>
-        <% @session.selectedodai.split(',').each do |o| %>
-          <li><%= o %></li>
-        <% end %>
-      </ul> 
+      <p>だれだれの作品置場</p>
     </div>
   </div>
   
-  <% if !@session.isstart and !@session.isfinished  %>
-
-    <% if @ismanager %>
-      <div class="panel panel-default" >
-
-        <div class="panel-heading">
-          <p>お題の設定</p>
-        </div>
-
-        <div class="panel-body">
-          <div class="row-fluid">
-         
-         
-    
-          <div class="input-group col-md-8">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button" id="selectOdai"><i class="glyphicon glyphicon-folder-open"></i></button>
-            </span>
-            <div class="input-group">
-              <input id="odaicover" type="text" class="form-control" placeholder="select file..." disabled>       
-            </div>
-          </div>
-
-            <form method="POST" action="<%= uri( "/getOdai/#{@session.id}" ,false ) %>">
-              <button class="btn btn-success col-md-6" type="submit">再抽選</button>
-            </form>
-
-            <form method="POST" action="<%= uri( "/uploadOdai/#{@session.id}",false ) %>" enctype="multipart/form-data" >
-              <input type="file" name="odaiFile" accept="text/plain" style="display:none;" required >
-              <button type="submit" class="btn btn-success col-md-6" >アップロード</button>
-            </form>
-
-          </div>
-        </div>
-      </div>
-
-      <% if !@odai.empty? %>
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="row-fluid">
-              <form method="POST" action="<%= uri( "/start/#{@session.id}",false ) %>">
-      
-                <div class="col-sm-12">
-                  <input class="form-group" type="number" min="0" max="24" value="1"  name="hours" >時間
-                  <input class="form-group" type="number" min="0" max="59" value="0" name="minutes" >分
-                  <input class="form-group" type="number" min="0" max="59" value="0" name="seconds" >秒
-                </div>
-      
-                <button type="submit" class="btn btn-success col-sm-12" >開始</button>
-      
-              </form>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <div class="panel panel-default">
-
-        <input id="endTime" type="hidden"value="<%= @session.endtime %>">
-
-        <div class="panel-body">
-          <div class="row-fluid">
-            <div class="text-center">開始までしばらくお待ち下さい……</div>
-          </div>
-
-        </div>
-      </div>
-
-    <% end %>
-  <% end %>
- 
-   
- 
-  <% if !@session.isfinished %>
-
-    <% if @session.isstart %>
-
-      <div class="panel panel-default">
-
-        <input id="endTime" type="hidden"value="<%= @session.endtime %>">
-
-        <div class="panel-heading">
-          <p> 残り時間 </p>
-        </div>  
-        
-        <div class="panel-body">
-          <div class="row-fluid">
-            <div class="col-md-12 text-center" id="TimeLeft">0時間00分00秒</div>
- 
-            <% if @ismanager %>
-              <form method="POST" action="<%= uri( "/forceEnd/#{@session.id}",false) %>">
-                <button type="submit" class="btn btn-danger col-md-12" id="forceend">中止</button>
-              </form>
-            <% end %>
-
-            <form method="POST" action="<%= uri( "/end/#{@session.id}",false) %>">
-  
-              <button type="submit" class="btn btn-success col-md-12" id="update" style="display:none" >次へ</button>
-  
-            </form>
-
-          </div>
-
-        </div>
-      </div>
-
-    <% end %>
-
-  <% else %>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <p>画像のアップロード</p>
-      </div>     
- 
-      <div class="panel-body" id="imageupload">
-        <div class="row-fluid">
-
-          <div class="input-group">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button" id="selectImage"><i class="glyphicon glyphicon-folder-open"></i></button>
-            </span>
-            <div class="input-group">
-              <input id="imagecover" type="text" class="form-control" placeholder="select file..." disabled>       
-            </div>
-          </div>
-
-          <form method="POST" action="<%= uri( "/uploadImage/#{@session.id}",false ) %>" enctype="multipart/form-data">
-            <input type="file" name="image" accept="image/*"  required style="display:none">
-            <button type="submit" onclick="upload(this.form,<%= @session.id %>);" class="btn btn-success col-md-12" >アップロード</button>
-            <%# <button type="submit" onclick="tweet(this.form, @session.id  );" class="btn btn-primary col-md-6" >tweet</button> %>
-          </form>
-         </div>
-      </div> 
+  <div class="panel panel-default">
+    <div class="panel-heading" >
+      <p>アップロードされた画像</p>
     </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading" >
-        <p>アップロードされた画像</p>
-      </div>
-      <div class="panel-body">
-        <div class="row-fluid"> 
-          <% @images.each do |i| %>
-
+    <div class="panel-body">
+      <div class="row-fluid"> 
+        <% @images.each do |i| %>
           <div class="col-md-4">
             <a href="<%= uri(@session.imagepath.gsub( 'public/' , '' ) + i,false) %>" class="thumbnail">
               <img width=""  src="<%= uri(@session.imagepath.gsub('public/','') + i , false ) %>">
             </a>
           </div>
-
-          <% end %>
-        </div>
-      </div>
-    </div> 
-   <% end %>
-
-  <% if !@ismanager %>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-             <p>管理パスワード</p>
-      </div>     
-      <div class="panel-body">
-        <form method="post" action="<%= uri( "/confirmpassword/#{@session.id}", false ) %>" >
-          <div class="col-sm-12">
-             <input type="password" name="password" >
-             <button type="submit" class="btn btn-primary form-group">送信</button>
-          </div>
-        </form>
+        <% end %>
       </div>
     </div>
-  <% end %> 
+  </div> 
+
 </div>
 
-<audio id="startsound" preload="auto">
-  <source src="<%= uri("/sounds/startsound.wav",false) %>" type="audio/wav" >
-</auto>
-<audio id="endsound" preload="auto">
-  <source src="<%= uri("/sounds/endsound.wav",false) %>" type="audio/wav" >
-</auto>
