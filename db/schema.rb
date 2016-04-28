@@ -11,17 +11,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151215115343) do
+ActiveRecord::Schema.define(version: 20160428152255) do
 
-  create_table "sessions", force: :cascade do |t|
+  create_table "accounts", force: :cascade do |t|
+    t.string   "kmcid"
     t.string   "name"
-    t.string   "password"
-    t.string   "endtime"
-    t.boolean  "isstart",      default: false, null: false
-    t.boolean  "isfinished",   default: false, null: false
-    t.integer  "autoreload",   default: 1,     null: false
-    t.string   "odai"
-    t.string   "selectedodai"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.string   "text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "account_id"
+    t.integer  "illust_id"
+  end
+
+  create_table "illusts", force: :cascade do |t|
+    t.string   "title"
+    t.string   "caption"
+    t.string   "filename"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "account_id"
+  end
+
+  create_table "illusts_tags", force: :cascade do |t|
+    t.integer  "illust_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,0 +1,33 @@
+<div class="container">
+
+  <div class="jumbotron">
+    <div class="row-fluid">
+      <p><%= @user.name %>の神絵置場</p>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading" >
+      <p>神絵たち</p>
+    </div>
+    <div class="panel-body">
+      <div class="row"> 
+        <% @user.illusts.each do |i| %>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail">
+                <img width=""  src="<%= uri( "./illusts/" + i.filename , false ) %>">
+              </a>
+              <div class="caption">
+                <h2><%= i.title  %></h2>
+                <p><%= i.caption %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div> 
+
+</div>
+

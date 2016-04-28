@@ -5,9 +5,11 @@
       <p>それぞれの部員のページ</p>
     </div>
     <div class="panel-body">
-      <div class="row-fluid">
-        <a href="<%= uri( '/' + '1' ,false ) %>" type="button" class="btn btn-primary col-md-12" ><%= "test man" %></a>
-      </div>
+      <div class="row">
+        <% @accounts.each do |a| %>
+          <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-primary col-md-3" ><%= a.name %></a>
+        <% end %>
+       </div>
     </div>
   </div>
 

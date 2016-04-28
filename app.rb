@@ -3,10 +3,20 @@ require 'fileutils'
 require 'active_record'
 require "sinatra/reloader"
 require 'json'
-require './models/sessions.rb'
+require './models/illust.rb'
+require './models/account.rb'
+require './models/tag.rb'
+require './models/comment.rb'
 require 'erubis'
 
 set :erb, :escape_html => true
+
+$stdout.sync = true
+
+ActiveRecord::Base.establish_connection(
+  adapter: 'sqlite3',
+  database: 'god.db'
+)
 
 configure do
   use Rack::Session::Cookie,
@@ -18,18 +28,6 @@ configure do
 end 
 
 set :public, File.dirname(__FILE__) + '/public'
-
-class Session < ActiveRecord::Base
-  DIRECTORY = "./public/sessions"
-
-  def path
-    DIRECTORY + "/" + self.id.to_s
-  end
-  def imagepath
-    self.path + "/images"
-  end
-
-end
 
 #便利品
 helpers do
@@ -72,7 +70,16 @@ helpers do
     Rack::Utils.escape_html(text)
   end
 
+  def kmcid 
+    "test"
+  end
+
+  def user 
+    Account.find_by_kmcid(kmcid)
+  end
+
 end
+
 
 get '/js/upload.js' do
   content_type :js
@@ -98,54 +105,61 @@ get '/upload'do
 
 end
 
-get '/:id' do
+post '/uploadillust' do
   
+  illust = user.illusts.build( title:params[:title] , caption:params[:caption] )
 
-#  @session = getSessionByid(params[:id])
-#  if @session == nil 
-      
-#    redirect "/error"
+  if params[:illust]
+    
+      if illust.save 
 
-#  else 
+        illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
+        illust.save       
+ 
+        save_path = "./public/illusts/" + illust.filename
+  
+        File.open( save_path , 'wb' ) do |f|
+          f.write params[:illust][:tempfile].read
+        end
 
-    #アップロードされた画像を表示するための配列づくり
-    @images = []
-#    Dir.glob( @session.imagepath + "/*" ).each do |image|
-#      @images.push( image.gsub( @session.imagepath , "" ) )
-#    end
+     #   session[:responce] = {code: 200, messages: "成功しました"}
+     # else 
+     #   session[:responce] = {code: 400, messages: photo.errors.full_messages}
+     # end
+    end
+  end  
 
-    erb :main
 
-#  end  
-   
+
+  redirect "/illust/" + illust.id.to_s
+
+end
+
+get '/illust/:id' do
+
+  @illust = Illust.find_by_id( params[:id].to_i )
+  erb :illust
+
+end
+
+get '/users/:kmcid' do
+  
+    @user = user
+    erb :user
+
 end 
 
 get '/mypage' do
   
+    @user = user
+    erb :user
 
-#  @session = getSessionByid(params[:id])
-#  if @session == nil 
-      
-#    redirect "/error"
-
-#  else 
-
-    #アップロードされた画像を表示するための配列づくり
-    @images = []
-#    Dir.glob( @session.imagepath + "/*" ).each do |image|
-#      @images.push( image.gsub( @session.imagepath , "" ) )
-#    end
-
-    erb :main
-
-#  end  
-   
 end 
 
 #インデックス
 get '/' do
 
-  session[:id] = ""  
-
+  @accounts = Account.all
   erb :index
+
 end

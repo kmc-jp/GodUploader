@@ -1,0 +1,20 @@
+<div class="container">
+
+  <div class="panel panel-default">
+    <div class="panel-heading" >
+      <h2 class="text-center"><%= @illust.title %></h2>
+    </div>
+    <div class="panel-body">
+      <div class="row"> 
+        <div class="col-md-12">
+          <a href="<%= uri( "./illusts/" + @illust.filename , false ) %>" >
+            <img src="<%= uri( "./illusts/" + @illust.filename , false ) %>" class="img-responsive center-block" >
+          </a>
+        </div>
+          <p class="col-md-12 text-center" ><%= @illust.caption %></p>
+      </div>
+    </div>
+  </div> 
+
+</div>
+

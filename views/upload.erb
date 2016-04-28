@@ -13,19 +13,33 @@
       <p>画像のアップロード</p>
     </div>     
  
-    <div class="panel-body" id="imageupload">
-      <div class="row-fluid">
-        <div class="input-group">
-          <button class="btn btn-default col-md-2" type="button" id="selectImage"><i class="glyphicon glyphicon-folder-open"></i></button>
-          <input id="imagecover" type="text" class="form-control col-md-10" placeholder="select file..." disabled>
-        </div>
+    <div class="panel-body" id="illustupload">
 
-        <form method="POST" action="" enctype="multipart/form-data">
-          <input type="file" name="image" accept="image/*"  required style="display:none">
+      <form method="POST" action="/uploadillust" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>タイトル</label>
+          <input type="text" name="title" class="form-control" placeholder="タイトルを入力して下さい。">
+        </div>      
+
+        <div class="form-group">
+          <label>キャプション</label>
+          <input type="text" name="caption"  class="form-control" placeholder="説明してください。">
+        </div>      
+
+        <div class="form-group">
+          <label>タグ</label>
+          <input type="text" name="tags" class="form-control" placeholder="半角カンマ(,)で区切ってタグを入力してください。">
+        </div>      
+
+        <div class="form-group">
+          <button class="btn btn-default col-md-2" type="button" id="selectillust"><i class="glyphicon glyphicon-folder-open"></i></button>
+          <input id="illustcover" type="text" class="form-control col-md-10" placeholder="select file..." disabled>
+        
+          <input type="file" name="illust" accept="image/*"  required style="display:none">
           <button type="submit" class="btn btn-success col-md-12" >アップロード</button>
           <%# <button type="submit" onclick="tweet(this.form, @session.id  );" class="btn btn-primary col-md-6" >tweet</button> %>
-        </form>
-      </div>
+        </div>
+      </form>
     </div> 
 
   </div>

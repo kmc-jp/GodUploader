@@ -9,6 +9,7 @@ gem 'sinatra-contrib'
 gem 'rake'
 gem 'erubis'
 gem 'twitter'
+gem 'mimemagic'
 
 group :production do
   gem 'pg'
