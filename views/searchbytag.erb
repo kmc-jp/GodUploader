@@ -1,0 +1,30 @@
+<div class="container">
+
+  <div class="panel panel-default">
+    <div class="panel-heading" >
+      <h2>タグ"<%= @tag.name %>"の神絵たち</p>
+    </div>
+    <div class="panel-body">
+      <div class="row"> 
+        <% @illusts.order("created_at DESC").each do |i| %>
+          <div class="col-xs-3 thumb">
+            <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail" >
+              <% if ishide(i) then %>
+                検閲によりサムネイル表示なし
+              <% else %>
+                <img width="" height="auto"  src="<%= uri( "./illusts/" + i.filename , false ) %>">
+              <% end %>
+              <div class="caption">
+                <h2><%= i.title  %></h2>
+                <h3><%= i.account.name %></h3>
+                <p><%= i.caption %></p>
+              </div>
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div> 
+
+</div>
+

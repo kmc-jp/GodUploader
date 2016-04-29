@@ -2,19 +2,127 @@
 
   <div class="panel panel-default">
     <div class="panel-heading" >
-      <h2 class="text-center"><%= @illust.title %></h2>
+      <div class="row">
+        <h2 class="text-center"><%= @illust.title %></h2>
+        <p class="text-center" ><%= @illust.caption %></p>
+        <p class="text-center"><a href="/users/<%= @illust.account.kmcid %>" ><%= @illust.account.name %></a>
+        <p class="text-center"><%= @illust.created_at.to_s %></p>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#editModal">情報の編集</button>
+      </div>
     </div>
     <div class="panel-body">
+
+      <div class="row">
+          <ul class="breadcrumb">
+            <li>タグ</li>
+            <% @illust.tags.each do |t| %>
+            <li><a href="/searchbytag/<%= t.id %>"><%= t.name %></a></li>
+            <% end %>
+            <%# <li><button class="btn btn-primary">編集</button></li>%>
+          </ul>
+      </div>
       <div class="row"> 
         <div class="col-md-12">
           <a href="<%= uri( "./illusts/" + @illust.filename , false ) %>" >
             <img src="<%= uri( "./illusts/" + @illust.filename , false ) %>" class="img-responsive center-block" >
           </a>
         </div>
-          <p class="col-md-12 text-center" ><%= @illust.caption %></p>
       </div>
+      
+      <div class="row">
+        <form method="post" action="/illust/<%= @illust.id %>/comment" >
+          <div class="col-md-10">
+            <input type="text" name="comment" class="form-control" >
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary col-md-12" >コメント</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="row">
+          <% @illust.comments.order( "created_at DESC" ).each do |c| %>
+            <div class="col-md-12">
+              <p><a href="/users/<%=c.account.kmcid%>"><%= c.account.name %></a> > <%= c.text %> -( <%= c.created_at.to_s %> )</p>
+            </div>
+          <% end %>
+      </div>
+
     </div>
   </div> 
 
+  <% if kmcid == @illust.account.kmcid then %>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <button class="btn btn-danger center-block" data-toggle="modal" data-target="#deleteModal">この神絵を削除する</button>
+        </div> 
+      </div>
+    </div>
+  <% end %> 
+
+
+
 </div>
 
+<!-- モーダル・ダイアログ -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+        <h4 class="modal-title">神絵の削除</h4>
+      </div>
+      <div class="modal-body">
+        <p>おお、神よ！この神絵を削除してしまうのですか？</p>
+      </div>
+      <div class="modal-footer">
+        <form action="/deleteillust/<%= @illust.id %>" method="POST" >
+          <div class="form-group">
+            <button type="submit" class="btn btn-danger form-control" >削除する</button>
+            <button type="button" class="btn btn-primary form-control" data-dismiss="modal">やめる</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+        <h4 class="modal-title">神絵の情報編集</h4>
+      </div>
+      <div class="modal-body">
+        <form action="/editillust/<%= @illust.id %>" method="POST" >
+          <div class="form-group">
+            <label>タイトル</label>
+            <input type="text" name="title" class="form-control" value="<%= @illust.title %>" required >
+          </div>
+          <div class="form-group">
+            <label>キャプション</label>
+            <input type="text" name="caption" class="form-control" value="<%= @illust.caption %>" required >
+          </div>
+          <div class="form-group">
+            <label>タグ</label>
+            <% tags = [] %>
+            <% @illust.tags.each do |t|  %>
+              <% tags.push( t.name ) %>
+            <% end %>
+            <input type="text" name="tags" class="form-control" value="<%= tags.join(',') %>" >
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success form-control" >送信する</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ require 'active_record'
 require "sinatra/reloader"
 require 'json'
 require './models/illust.rb'
+require './models/illust_tag.rb'
 require './models/account.rb'
 require './models/tag.rb'
 require './models/comment.rb'
@@ -71,19 +72,46 @@ helpers do
   end
 
   def kmcid 
-    "test"
+    "hoge"
   end
 
   def user 
     Account.find_by_kmcid(kmcid)
   end
 
-end
+  def hidetags
+    [ "R-18" , "R-18G" ]
+  end
 
+  def ishide(illust)
+
+    flag = false
+
+    hidetags.each do |t|
+      if illust.tags.exists?( :name => t ) then
+        flag = true
+      end
+    end
+
+    flag
+
+  end
+
+  def create_account
+    if !Account.exists?( :kmcid => kmcid ) then
+      Account.create( kmcid:kmcid , name:kmcid )
+    end
+  end
+
+end
 
 get '/js/upload.js' do
   content_type :js
   erb :"upload.js", :layout => nil
+end
+get '/js/user.js' do
+  content_type :js
+  erb :"user.js", :layout => nil
 end
 
 post '/confirmpassword/:id' do
@@ -101,8 +129,26 @@ end
 
 get '/upload'do
 
+  create_account
+
   erb :upload
 
+end
+
+get '/searchbytag/:tagid' do
+  
+  create_account
+
+  @tag = Tag.find_by_id( params[:tagid] )
+  @illusts = @tag.illusts
+
+  erb :searchbytag
+
+end
+
+get '/tags' do
+  @tags = Tag.all
+  erb :tags
 end
 
 post '/uploadillust' do
@@ -113,6 +159,14 @@ post '/uploadillust' do
     
       if illust.save 
 
+         params[:tags].split(',').each do |t|
+          if Tag.exists?( :name => t ) then
+            illust.tags << Tag.find_by_name(t)
+          else
+            illust.tags.create( name:t )
+          end
+        end
+
         illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
         illust.save       
  
@@ -122,44 +176,118 @@ post '/uploadillust' do
           f.write params[:illust][:tempfile].read
         end
 
-     #   session[:responce] = {code: 200, messages: "成功しました"}
-     # else 
-     #   session[:responce] = {code: 400, messages: photo.errors.full_messages}
-     # end
     end
   end  
-
 
 
   redirect "/illust/" + illust.id.to_s
 
 end
 
+post '/deleteillust/:id' do
+
+  if Illust.exists?( :id => params[:id].to_i ) then
+    Illust.find_by_id( params[:id].to_i ).destroy
+  end
+ 
+  redirect "/illust/" + params[:id]
+
+end
+
+post '/editillust/:id' do
+
+  if Illust.exists?( :id => params[:id].to_i ) then
+    illust = Illust.find_by_id( params[:id].to_i )
+    
+    illust.title = params[:title]
+    illust.caption = params[:caption]
+    illust.tags.delete_all
+
+    params[:tags].split(',').each do |t|
+      if Tag.exists?( :name => t ) then
+        illust.tags << Tag.find_by_name(t)
+      else
+        illust.tags.create( name:t )
+      end
+
+    end
+
+    illust.save
+
+  end
+ 
+  redirect "/illust/" + params[:id]
+
+end
+
 get '/illust/:id' do
 
-  @illust = Illust.find_by_id( params[:id].to_i )
-  erb :illust
+  create_account
+
+  if Illust.exists?( :id => params[:id].to_i )
+
+    @illust = Illust.find_by_id( params[:id].to_i )
+
+    erb :illust
+  
+  else
+  
+    erb :deletedillust
+  
+  end
 
 end
 
 get '/users/:kmcid' do
   
-    @user = user
-    erb :user
+  create_account
 
+  if kmcid == params[:kmcid] then
+    redirect '/mypage'
+  else 
+    @user = Account.find_by_kmcid(params[:kmcid])
+    erb :user
+  end
 end 
+
+post '/illust/:id/comment' do
+  
+  illust = Illust.find_by_id(params[:id].to_i)
+
+  comment = illust.comments.build( text:params[:comment] )
+  comment.account = user
+  comment.save
+
+  redirect '/illust/' + params[:id].to_s
+
+end
+
+post '/changeusersettings' do
+
+  a = user
+  a.name = params[:name]
+  a.save
+
+  redirect '/mypage'
+
+end
 
 get '/mypage' do
   
-    @user = user
-    erb :user
+  create_account
+
+  @user = user
+  erb :user
 
 end 
 
 #インデックス
 get '/' do
 
+  create_account
+
   @accounts = Account.all
+
   erb :index
 
 end

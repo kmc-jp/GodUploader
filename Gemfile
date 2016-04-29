@@ -10,6 +10,9 @@ gem 'rake'
 gem 'erubis'
 gem 'twitter'
 gem 'mimemagic'
+source 'https://rails-assets.org' do
+  gem 'rails-assets-bootstrap-fileinput', '~> 2.5.0'
+end
 
 group :production do
   gem 'pg'

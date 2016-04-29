@@ -11,6 +11,7 @@
   <link href="<%= uri('css/starter-template.css',false) %>" rel="stylesheet">
   <link href="<%= uri('css/sticky-footer.css',false) %>" rel="stylesheet">
   <link href="<%= uri('css/topjumbotron.css',false) %>" rel="stylesheet">
+  <link href="<%= uri('css/thumbnail-gallery.css',false) %>" rel="stylesheet">
 
   <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
   <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js',false) %>"></script><![endif]-->
@@ -19,6 +20,7 @@
   <script type="text/javascript" src="<%= uri('js/jquery-1.11.3.min.js',false) %>"></script>
   <script type="text/javascript" src="<%= uri('js/moment.js',false) %>"></script>
   <script type="text/javascript" src="<%= uri('js/bootstrap.min.js',false) %>"></script>
+  <script type="text/javascript" src="<%= uri('js/spoiler.js',false) %>"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="<%= uri('js/ie10-viewport-bug-workaround.js',false) %>"></script>
 </head>
@@ -34,6 +36,7 @@
 	<ul class="nav navbar-nav">
 	  <li><a href="<%= uri("/upload",false) %>" >アップロード</a></li>
 	  <li><a href="<%= uri("/mypage",false) %>" >マイページ</a></li>
+	  <li><a href="<%= uri("/tags",false) %>" >タグ検索</a></li>
         </ul>
       </div>
     </div> 

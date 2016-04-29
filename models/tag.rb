@@ -1,3 +1,4 @@
 class Tag < ActiveRecord::Base
-  has_many :illusts, through: :illusts_tags
+  has_many :illust_tags
+  has_many :illusts, :through => :illust_tags
 end
