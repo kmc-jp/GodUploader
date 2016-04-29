@@ -169,6 +169,10 @@ post '/uploadillust' do
 
         illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
         illust.save       
+
+        if File.exists?( uri( 'public/illusts', false ) )
+          Dir.mkdir( uri( 'public/illusts' , false ) )
+        end
  
         save_path = "./public/illusts/" + illust.filename
   
