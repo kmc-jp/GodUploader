@@ -72,7 +72,11 @@ helpers do
   end
 
   def kmcid 
-    "hoge"
+    if request.env["username"] == nil then
+       "hoge"
+    else 
+      request.env["username"]
+    end
   end
 
   def user 
@@ -291,6 +295,8 @@ get '/' do
   create_account
 
   @accounts = Account.all
+
+  p Account.all
 
   erb :index
 
