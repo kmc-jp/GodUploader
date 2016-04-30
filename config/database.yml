@@ -3,4 +3,4 @@ development:
   database: god.db
   username: root
 production:
-  adapter: postgresql
+  adapter: sqlite3
