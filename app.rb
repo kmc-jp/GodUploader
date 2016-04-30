@@ -72,10 +72,10 @@ helpers do
   end
 
   def kmcid 
-    if request.env["username"] == nil then
-       "hoge"
+    if request.env["REMOTE_USER"] == nil then
+       "unknown_user"
     else 
-      request.env["username"]
+      request.env["REMOTE_USER"]
     end
   end
 

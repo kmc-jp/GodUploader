@@ -44,7 +44,6 @@ GEM
     multi_json (1.11.2)
     multipart-post (2.0.0)
     naught (1.1.0)
-    pg (0.18.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -99,7 +98,6 @@ DEPENDENCIES
   activerecord
   erubis
   mimemagic
-  pg
   rails-assets-bootstrap-fileinput (~> 2.5.0)!
   rake
   sinatra

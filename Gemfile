@@ -15,7 +15,7 @@ source 'https://rails-assets.org' do
 end
 
 group :production do
-  gem 'pg'
+  gem 'sqlite3'
 end
 
 group :development do
