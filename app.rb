@@ -188,7 +188,7 @@ post '/uploadillust' do
   end  
 
 
-  redirect "/illust/" + illust.id.to_s
+  redirect uri( "/illust/" + illust.id.to_s , false )
 
 end
 
@@ -198,7 +198,7 @@ post '/deleteillust/:id' do
     Illust.find_by_id( params[:id].to_i ).destroy
   end
  
-  redirect "/illust/" + params[:id]
+  redirect uri( "/illust/" + params[:id] , false )
 
 end
 
@@ -224,7 +224,7 @@ post '/editillust/:id' do
 
   end
  
-  redirect "/illust/" + params[:id]
+  redirect uri( "/illust/" + params[:id] , false )
 
 end
 
@@ -266,7 +266,7 @@ post '/illust/:id/comment' do
   comment.account = user
   comment.save
 
-  redirect '/illust/' + params[:id].to_s
+  redirect uri( '/illust/' + params[:id].to_s , false )
 
 end
 
@@ -276,7 +276,7 @@ post '/changeusersettings' do
   a.name = params[:name]
   a.save
 
-  redirect '/mypage'
+  redirect uri( '/mypage' , false )
 
 end
 
