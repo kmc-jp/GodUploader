@@ -251,7 +251,7 @@ get '/users/:kmcid' do
   create_account
 
   if kmcid == params[:kmcid] then
-    redirect '/mypage'
+    redirect uri( '/mypage' , false )
   else 
     @user = Account.find_by_kmcid(params[:kmcid])
     erb :user
