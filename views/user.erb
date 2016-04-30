@@ -51,7 +51,7 @@
         <h4 class="modal-title">神絵師情報の編集</h4>
       </div>
       <div class="modal-body">
-        <form method="POST" action="/changeusersettings" >
+        <form method="POST" action="<%= uri( '/changeusersettings',false ) %>" >
           <div class="form-group">
              <label>KMC-ID</label>
              <input value="<%= @user.kmcid %>" name="kmcid" type="text" class="form-control"  readonly >

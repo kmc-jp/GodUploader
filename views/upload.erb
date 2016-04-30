@@ -8,7 +8,7 @@
  
     <div class="panel-body" id="illustupload">
 
-      <form method="POST" action="/uploadillust" enctype="multipart/form-data">
+      <form method="POST" action="<%= uri( '/uploadillust',false ) %>" enctype="multipart/form-data">
         <input type="file" name="illust" accept="image/*"  required style="display:none;" >
         <div class="row">
           <div class="input-group">
