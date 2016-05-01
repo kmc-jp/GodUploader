@@ -304,6 +304,12 @@ get '/mypage' do
 
 end 
 
+get '/history' do
+
+  create_account
+  erb :history
+end
+
 #インデックス
 get '/' do
 
