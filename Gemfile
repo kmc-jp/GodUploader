@@ -9,6 +9,7 @@ gem 'sinatra-contrib'
 gem 'rake'
 gem 'erubis'
 gem 'twitter'
+gem 'slack-api'
 
 group :production do
   gem 'sqlite3'

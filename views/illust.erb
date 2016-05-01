@@ -6,7 +6,7 @@
         <h2 class="text-center"><%= @illust.title %></h2>
         <p class="text-center" ><%= @illust.caption %></p>
         <p class="text-center"><a href="<%= uri( '/users/'+ @illust.account.kmcid,false ) %>" ><%= @illust.account.name %></a>
-        <p class="text-center"><%= @illust.created_at.to_s %></p>
+        <p class="text-center"><%= @illust.created_at.strftime("%Y年%m月%d日 %H時%M分%S秒") %></p>
       </div>
       <div class="row">
         <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#editModal">情報の編集</button>
@@ -76,15 +76,15 @@
         <h4 class="modal-title">神絵の削除</h4>
       </div>
       <div class="modal-body">
-        <p>おお、神よ！この神絵を削除してしまうのですか？</p>
-      </div>
-      <div class="modal-footer">
+        <p>この神絵を削除しますか？</p>
         <form action="<%= uri( '/deleteillust/' + @illust.id.to_s,false ) %>" method="POST" >
           <div class="form-group">
             <button type="submit" class="btn btn-danger form-control" >削除する</button>
-            <button type="button" class="btn btn-primary form-control" data-dismiss="modal">やめる</button>
           </div>
         </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">やめる</button>
       </div>
     </div>
   </div>
@@ -100,11 +100,11 @@
         <form action="<%= uri('/editillust/'+@illust.id.to_s ,false) %>" method="POST" >
           <div class="form-group">
             <label>タイトル</label>
-            <input type="text" name="title" class="form-control" value="<%= @illust.title %>" required >
+            <input type="text" name="title" class="form-control" maxlength="<%= maxtitlelength %>" value="<%= @illust.title %>" required >
           </div>
           <div class="form-group">
             <label>キャプション</label>
-            <input type="text" name="caption" class="form-control" value="<%= @illust.caption %>" required >
+            <input type="text" name="caption" class="form-control" maxlength="<%= maxcaptionlength %>" value="<%= @illust.caption %>" >
           </div>
           <div class="form-group">
             <label>タグ</label>
@@ -112,7 +112,7 @@
             <% @illust.tags.each do |t|  %>
               <% tags.push( t.name ) %>
             <% end %>
-            <input type="text" name="tags" class="form-control" value="<%= tags.join(',') %>" >
+            <input type="text" name="tags" class="form-control" maxlength="<%= maxtaglength %>" value="<%= tags.join(',') %>" >
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-success form-control" >送信する</button>
@@ -120,7 +120,7 @@
         </form>
       </div>
       <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">やめる</button>
       </div>
     </div>
   </div>

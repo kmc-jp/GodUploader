@@ -15,28 +15,28 @@
             <span class="input-group-btn">
               <button class="btn btn-default" type="button" id="selectillust"><i class="glyphicon glyphicon-folder-open"></i></button>
             </span>
-            <input id="illustcover" type="text" class="form-control" placeholder="ファイルを選択してください。" disabled>        
+            <input id="illustcover" type="text"class="form-control" placeholder="ファイルを選択してください。" disabled>        
           </div>
         </div>
 
         <div class="row">
           <div class="form-group">
             <label>タイトル</label>
-            <input type="text" name="title" class="form-control" placeholder="タイトルを入力して下さい。" required>
+            <input type="text" name="title" maxlength="<%= maxtitlelength %>" class="form-control" placeholder="タイトルを入力して下さい。" required>
           </div>      
         </div>
 
         <div class="row">
           <div class="form-group">
             <label>キャプション</label>
-            <input type="text" name="caption"  class="form-control" placeholder="説明してください。" required>
+            <input type="text" name="caption" maxlength="<%= maxcaptionlength %>" class="form-control" placeholder="この絵の説明を入力してください。">
           </div>      
         </div>
         
         <div class="row">
           <div class="form-group">
-            <label>タグ</label>
-            <input type="text" name="tags" class="form-control" placeholder="半角カンマ(,)で区切ってタグを入力してください。">
+            <label>タグ 半角カンマ(,)で区切ると複数入力できます。</label>
+            <input type="text" name="tags" class="form-control" placeholder="半角カンマ(,)で区切ってタグを入力してください。" maxlength="<%= maxtaglength %>" >
           </div>      
         </div>
         
