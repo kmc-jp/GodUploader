@@ -107,6 +107,21 @@ helpers do
     end
   end
 
+  def maxtitlelength
+    "50"
+  end
+
+  def maxcaptionlength
+    "50"
+  end
+  def maxtaglength
+    "96"
+  end
+
+  def thumbheight
+    "320px"
+  end
+
 end
 
 get '/js/upload.js' do
@@ -295,8 +310,10 @@ get '/' do
   create_account
 
   @accounts = Account.all
+  
+  @newerillusts = Illust.order( ":created_at DESC" ).limit(8)
 
-  p Account.all
+  p @accounts
 
   erb :index
 

@@ -7,16 +7,16 @@
     <div class="panel-body">
       <div class="row"> 
         <% @illusts.order("created_at DESC").each do |i| %>
-          <div class="col-xs-3 thumb">
-            <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail" >
+          <div class="col-md-3">
+            <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail" style="height:<%= thumbheight %>;" >
               <% if ishide(i) then %>
                 検閲によりサムネイル表示なし
               <% else %>
-                <img width="" height="auto"  src="<%= uri( "./illusts/" + i.filename , false ) %>">
+                <img style="width:auto;height:50%;"  src="<%= uri( "./illusts/" + i.filename , false ) %>">
               <% end %>
-              <div class="caption">
+              <div class="caption" style="width:auto;height:50%">
                 <h2><%= i.title  %></h2>
-                <h3><%= i.account.name %></h3>
+                <p><%= i.account.name %></p>
                 <p><%= i.caption %></p>
               </div>
             </a>
