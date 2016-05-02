@@ -14,5 +14,17 @@ $(function() {
 
   });
 
+  $('input[name= isslack]').change(function(){
+    if ($(this).is(':checked')) {
+      $('input[name=channel]').removeAttr('disabled').focus();
+      $('input[name=channel]').attr('required','required');
+      $('label[name=channel]').removeClass('disabled');
+    } else {
+      $('input[name=channel]').attr('disabled','disabled');
+      $('label[name=channel]').removeAttr('required');
+      $('label[name=channel]').addClass('disabled');
+    }
+  });
+
 });
 

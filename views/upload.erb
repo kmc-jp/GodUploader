@@ -41,6 +41,17 @@
         </div>
         
         <div class="row">
+          <div class="form-group">
+            <div class="form-inline">
+              <label>Slackに通知する</label>
+              <input type="checkbox" name="isslack" >
+              <label name="channel" disabled >投稿先のチャンネル(投稿先に迷惑をかけないように！) #</label>
+              <input type="text" name="channel" class="form-control" placeholder="graphics" maxlength="21" pattern="^[0-9a-z!&quot;#$%&amp;@'()*+,./_-]+$" disabled >
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
           <button type="submit" class="btn btn-success center-block" >投稿</button>
           <%# <button type="submit" onclick="tweet(this.form, @session.id  );" class="btn btn-primary col-md-6" >tweet</button> %>
         </div>

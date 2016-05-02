@@ -3,6 +3,7 @@ require 'fileutils'
 require 'active_record'
 require "sinatra/reloader"
 require 'json'
+require 'net/http'
 require './models/illust.rb'
 require './models/illust_tag.rb'
 require './models/account.rb'
@@ -122,6 +123,29 @@ helpers do
     "320px"
   end
 
+  def upload_post( channel , illust )
+
+    tags = []
+    illust.tags.each do |t|
+      tags.push( t.name )
+    end
+
+    data = {
+            "username" => "GodIllustUploader",
+            "icon_emoji" => ":pixiv:",
+            "channel" => "#" + channel,
+            "text"=> illust.account.name + "が新たな絵をアップロードなさいました！",
+            "attachments"=> [
+              {
+                "title" => illust.title,
+                "text" => illust.caption + "\n" + "タグ:" + tags.join(',') + "\n" + "URI:https://inside.kmc.gr.jp/godillustuploader/illusts/" + illust.filename
+              }
+            ]
+          }
+    request_url = "https://hooks.slack.com/services/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"
+    uri = URI.parse(request_url)
+    http = Net::HTTP.post_form(uri, {"payload" => data.to_json}) 
+  end
 end
 
 get '/js/upload.js' do
@@ -199,6 +223,9 @@ post '/uploadillust' do
           f.write params[:illust][:tempfile].read
         end
 
+        if params[:isslack] then
+          upload_post( params[:channel] , illust )
+        end
     end
   end  
 
