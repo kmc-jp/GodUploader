@@ -132,9 +132,9 @@ helpers do
 
     data = {
             "username" => "GodIllustUploader",
-            "icon_emoji" => ":innocent:",
-            "channel" => channel,
-            "text"=> illust.account.name + "が新たな絵をアップロードされました！",
+            "icon_emoji" => ":pixiv:",
+            "channel" => "#" + channel,
+            "text"=> illust.account.name + "が新たな絵をアップロードなさいました！",
             "attachments"=> [
               {
                 "title" => illust.title,
@@ -223,8 +223,9 @@ post '/uploadillust' do
           f.write params[:illust][:tempfile].read
         end
 
-        upload_post( "#kata-memo" , illust )
-
+        if params[:isslack] then
+          upload_post( params[:channel] , illust )
+        end
     end
   end  
 
