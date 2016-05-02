@@ -240,7 +240,7 @@ post '/deleteillust/:id' do
     Illust.find_by_id( params[:id].to_i ).destroy
   end
  
-  redirect uri( "/illust/" + params[:id] , false )
+  redirect uri( "/users/" + kmcid , false )
 
 end
 
