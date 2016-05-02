@@ -138,7 +138,7 @@ helpers do
             "attachments"=> [
               {
                 "title" => illust.title,
-                "text" => illust.caption + "\n" + "タグ:" + tags.join(',') + "\n" + "URI:https://inside.kmc.gr.jp/godillustuploader/illusts/" + illust.filename
+                "text" => illust.caption + "\n" + "タグ:" + tags.join(',') + "\n" + "URI:https://inside.kmc.gr.jp/godillustuploader/illust/" + illust.id.to_s
               }
             ]
           }
