@@ -224,7 +224,9 @@ post '/uploadillust' do
         end
 
         if params[:isslack] then
-          upload_post( params[:channel] , illust )
+          if params[:channel] != nil then
+            upload_post( params[:channel] , illust )
+          end
         end
     end
   end  
@@ -240,7 +242,7 @@ post '/deleteillust/:id' do
     Illust.find_by_id( params[:id].to_i ).destroy
   end
  
-  redirect uri( "/illust/" + params[:id] , false )
+  redirect uri( "/users/" + kmcid , false )
 
 end
 
