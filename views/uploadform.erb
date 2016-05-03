@@ -1,0 +1,29 @@
+<%== erb :illustinfoform %>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="form-group">
+      <div class="form-inline">
+        <label>Slackに通知する</label>
+        <input type="checkbox" name="isslack" >
+        <label name="channel" disabled >投稿先のチャンネル(迷惑厳禁！) #</label>
+        <input type="text" name="channel" class="form-control" placeholder="graphics" maxlength="21" pattern="^[0-9a-z!&quot;#$%&amp;@'()*+,./_-]+$" disabled >
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$( function(){
+  $('input[name= isslack]').change(function(){
+    if ($(this).is(':checked')) {
+      $('input[name=channel]').removeAttr('disabled').focus();
+      $('input[name=channel]').attr('required','required');
+      $('label[name=channel]').removeClass('disabled');
+    } else {
+      $('input[name=channel]').attr('disabled','disabled');
+      $('label[name=channel]').removeAttr('required');
+      $('label[name=channel]').addClass('disabled');
+    }
+  });
+});
+</script>

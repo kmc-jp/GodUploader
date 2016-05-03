@@ -1,0 +1,163 @@
+ <link href="<%= uri('css/jquery.minicolors.css',false) %>" rel="stylesheet">
+
+<script type="text/javascript" src="<%= uri( "/js/jquery.minicolors.min.js" , false ) %>" ></script>
+<script type="text/javascript" src="<%= uri( "/js/mousetrap.min.js" , false ) %>" ></script>
+<script type="text/javascript" src="<%= uri( "/js/tegaki.js" , false ) %>" ></script>
+
+<style type="text/css" >
+.color {
+  display:inline-block;
+  height:50px;
+  width:100%;
+  border:1px solid #000;
+}
+
+.colors {
+  display:inline-block;
+  height:25px;
+  width:25px;
+  border:1px solid #000;
+}
+
+
+#canvas{
+  border:1px solid #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
+
+<div class="container" >
+
+  <div class="panel panel-default ">
+    <div class="panel-heading">
+      <h4 class="text-center" >TEGAKI Draw and Upload ver.1.0.0  </h4>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-8" >
+          <canvas id="canvas" class="center-block" width="640px" height="480px" >このブラウザはhtml5に対応していません。</canvas> 
+        </div>
+        <div class="col-md-4"> 
+          <div class="row">
+            <div class="col-xs-10">
+              <div class="text-center">
+                <input id="line" data-slider-id='lineSlider' type="text" data-slider-min="1" data-slider-max="20" data-slider-step="1" data-slider-value="2"/>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div id="lineWidth">2</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="text-center">
+                <span class="color" style="background-color:#000" id="color1"></span>
+              </div>  
+            </div>
+            <div class="col-xs-6">
+              <div class="text-center">
+                <span class="color"  style="background-color:#fff" id="color2"></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+            <button class="btn btn-primary btn-block" id="undo">元に戻す</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-danger btn-block" id="clear">全て消す</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-center">
+                <input type="text" id="color-picker" class="form-control" data-inline="true" value="#000">
+              </div>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#000"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#fff"></div></div>
+              </div>
+
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#a80515"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#f1d0d0"></div></div>
+              </div>
+
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#4b3d38"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#eae5d5"></div></div>
+              </div>
+    
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#384b43"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#cfeadd"></div></div>
+              </div>
+      
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#313768"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#d5e9f3"></div></div>
+              </div>
+              <div class="col-xs-2">
+                <div class="col-xs-12"><div class="colors" style="background-color:#800000"></div></div>
+                <div class="col-xs-12"><div class="colors" style="background-color:#f0e0d6"></div></div>
+              </div>
+            </div>
+
+          </div>
+        <div class="row">
+          <div class="col-md-12">
+            <button class="btn btn-danger btn-block" id="switch">サイズ縦横切替</button>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9">
+              <button class="btn btn-success btn-block" data-toggle="modal" data-target="#uploadModal" >アップロード</button>
+            </div>
+            <div class="col-xs-3">
+              <button class="btn btn-primary btn-block" id="save" >ダウンロード</button>
+            </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="uploadModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h4 class="modal-title">神絵を投稿する</h4>
+      </div>
+    
+      <div class="modal-body">
+      
+        <%== erb :uploadform %>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-success form-control" id="upload" >送信する</button>
+        </div>
+      
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">やめる</button>
+      </div>
+   
+    </div>
+  </div>
+</div>
