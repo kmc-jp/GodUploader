@@ -157,6 +157,11 @@ get '/js/user.js' do
   erb :"user.js", :layout => nil
 end
 
+get '/js/tegaki.js' do
+  content_type :js
+  erb :"tegaki.js", :layout => nil
+end
+
 post '/confirmpassword/:id' do
   se = getSessionByid(params[:id])
   session[:password] = params[:password]
@@ -194,19 +199,24 @@ get '/tags' do
   erb :tags
 end
 
+get '/tegaki' do
+  erb :tegaki
+end
+
 post '/uploadillust' do
   
   illust = user.illusts.build( title:params[:title] , caption:params[:caption] )
-
   if params[:illust]
     
       if illust.save 
 
-         params[:tags].split(',').each do |t|
-          if Tag.exists?( :name => t ) then
-            illust.tags << Tag.find_by_name(t)
-          else
-            illust.tags.create( name:t )
+        params[:tags].split(',').each do |t|
+          if !illust.tags.exists?( :name => t ) then
+            if Tag.exists?( :name => t ) then
+              illust.tags << Tag.find_by_name(t)
+            else
+              illust.tags.create( name:t )
+            end
           end
         end
 
@@ -230,9 +240,14 @@ post '/uploadillust' do
         end
     end
   end  
-
-
-  redirect uri( "/illust/" + illust.id.to_s , false )
+  
+  if params[:tegaki] then
+    content_type :json
+    data = { redirect: uri( "/illust/" + illust.id.to_s , false ) }
+    data.to_json
+  else 
+    redirect uri( "/illust/" + illust.id.to_s , false )
+  end
 
 end
 
@@ -256,12 +271,13 @@ post '/editillust/:id' do
     illust.tags.delete_all
 
     params[:tags].split(',').each do |t|
-      if Tag.exists?( :name => t ) then
-        illust.tags << Tag.find_by_name(t)
-      else
-        illust.tags.create( name:t )
+      if !illust.tags.exists?( :name => t ) then
+        if Tag.exists?( :name => t ) then
+          illust.tags << Tag.find_by_name(t)
+        else
+          illust.tags.create( name:t )
+        end
       end
-
     end
 
     illust.save

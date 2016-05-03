@@ -92,6 +92,21 @@
   </div>
 </div>
 
+<script>
+$(function(){
+  $( "input[name=title]" ).val( "<%= @illust.title %>" );
+  $( "input[name=caption]" ).val( "<%= @illust.caption %>" );
+
+  <% tags = [] %>
+  <% @illust.tags.each do |t|  %>
+  <% tags.push( t.name ) %>
+  <% end %>
+  
+  $( "input[name=tags]" ).val( "<%= tags.join(',') %>" );
+});
+</script>
+
+
 <div class="modal fade" id="editModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -100,22 +115,9 @@
       </div>
       <div class="modal-body">
         <form action="<%= uri('/editillust/'+@illust.id.to_s ,false) %>" method="POST" >
-          <div class="form-group">
-            <label>タイトル</label>
-            <input type="text" name="title" class="form-control" maxlength="<%= maxtitlelength %>" value="<%= @illust.title %>" required >
-          </div>
-          <div class="form-group">
-            <label>キャプション</label>
-            <input type="text" name="caption" class="form-control" maxlength="<%= maxcaptionlength %>" value="<%= @illust.caption %>" >
-          </div>
-          <div class="form-group">
-            <label>タグ</label>
-            <% tags = [] %>
-            <% @illust.tags.each do |t|  %>
-              <% tags.push( t.name ) %>
-            <% end %>
-            <input type="text" name="tags" class="form-control" maxlength="<%= maxtaglength %>" value="<%= tags.join(',') %>" >
-          </div>
+
+          <%== erb :illustinfoform %>
+
           <div class="form-group">
             <button type="submit" class="btn btn-success form-control" >送信する</button>
           </div>
