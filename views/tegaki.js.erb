@@ -120,12 +120,12 @@ $(function(){
     
     var fd = new FormData();
     fd.append( "illust" , blob );
-    fd.append( "title" , $( "title" ).val() );
-    fd.append( "caption" , $( "caption" ).val() );
-    fd.append( "tags" , $("tags").val() );
+    fd.append( "title" , $( "input[name=title]" ).val() );
+    fd.append( "caption" , $( "input[name=caption]" ).val() );
+    fd.append( "tags" , $("input[name=tags]").val() );
     fd.append( "tegaki" , "tegaki" );
     $.ajax({
-      url:"/uploadillust",
+      url:"<%= uri( '/uploadillust' , false) %>",
       type: "POST",
       contentType: false,
       processData: false,
