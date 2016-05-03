@@ -157,6 +157,11 @@ get '/js/user.js' do
   erb :"user.js", :layout => nil
 end
 
+get '/js/tegaki.js' do
+  content_type :js
+  erb :"tegaki.js", :layout => nil
+end
+
 post '/confirmpassword/:id' do
   se = getSessionByid(params[:id])
   session[:password] = params[:password]
@@ -192,6 +197,10 @@ end
 get '/tags' do
   @tags = Tag.all
   erb :tags
+end
+
+get '/tegaki' do
+  erb :tegaki
 end
 
 post '/uploadillust' do
