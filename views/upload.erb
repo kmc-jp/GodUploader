@@ -19,37 +19,7 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="form-group">
-            <label>タイトル</label>
-            <input type="text" name="title" maxlength="<%= maxtitlelength %>" class="form-control" placeholder="タイトルを入力して下さい。" required>
-          </div>      
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <label>キャプション</label>
-            <input type="text" name="caption" maxlength="<%= maxcaptionlength %>" class="form-control" placeholder="この絵の説明を入力してください。">
-          </div>      
-        </div>
-        
-        <div class="row">
-          <div class="form-group">
-            <label>タグ 半角カンマ(,)で区切ると複数入力できます。</label>
-            <input type="text" name="tags" class="form-control" placeholder="半角カンマ(,)で区切ってタグを入力してください。" maxlength="<%= maxtaglength %>" >
-          </div>      
-        </div>
-        
-        <div class="row">
-          <div class="form-group">
-            <div class="form-inline">
-              <label>Slackに通知する</label>
-              <input type="checkbox" name="isslack" >
-              <label name="channel" disabled >投稿先のチャンネル(投稿先に迷惑をかけないように！) #</label>
-              <input type="text" name="channel" class="form-control" placeholder="graphics" maxlength="21" pattern="^[0-9a-z!&quot;#$%&amp;@'()*+,./_-]+$" disabled >
-            </div>
-          </div>
-        </div>
+        <%== erb :uploadform %>
 
         <div class="row">
           <button type="submit" class="btn btn-success center-block" >投稿</button>
@@ -57,8 +27,6 @@
         </div>
       </form>
     </div> 
- 
-
 
   </div>
 
