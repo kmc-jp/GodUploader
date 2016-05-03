@@ -1,0 +1,205 @@
+var preImage;
+var canvas;
+$(function(){
+
+  var offset = 0; //マウスカーソルの左上が描画位置になるような補正値
+  var x;
+  var y;
+  var drawFlag = false;
+  
+  var chooseColor = $('#color1');
+  chooseColor.css( 'border' , '1px solid #F00' );
+  var eraseColor = $( '#color2' );
+  canvas = $( 'canvas' ).get(0);
+  if ( canvas.getContext ){
+    var c = canvas.getContext( '2d' ); 
+    c.lineJoin = 'round';
+    c.lineCap  = 'round';
+    clearCanvas( c,eraseColor.css('background-color') );
+    preImage = c.getImageData( 0,0,canvas.width,canvas.height ); 
+  }
+
+  $( 'canvas' ).mousedown( function(e){
+
+    drawFlag = true;
+    x = e.pageX - $(this).offset().left - offset;
+    y = e.pageY - $(this).offset().top - offset;
+    preImage = c.getImageData(0,0,canvas.width,canvas.height);
+    
+    return false;
+
+  });
+
+  $( 'canvas' ).mousemove(function(e){
+
+    if ( drawFlag ){
+    
+      var toX = e.pageX - $( 'canvas' ).offset().left - offset;
+      var toY = e.pageY - $( 'canvas' ).offset().top - offset;
+
+      c.lineWidth = $( '#line' ).slider( 'getValue' );
+      c.strokeStyle = chooseColor.css( "background-color" );
+      c.beginPath();
+      c.moveTo( x , y );
+      c.lineTo( toX , toY );
+      c.stroke();
+      c.closePath();
+
+      x = toX;
+      y = toY;
+
+    }
+  
+  });
+
+  $( 'canvas' ).on('mouseup' , function(){
+    
+    drawFlag = false;
+  
+  });
+
+  $( 'canvas' ).on( 'mouseleave', function(){
+
+    drawFlag = false;
+
+  });
+
+  $( '#clear' ).click(function(e){
+    if ( !confirm('本当に全て消してしまいますか？') )return;
+    e.preventDefault();
+    preImage = c.getImageData( 0,0,canvas.width,canvas.height);
+    clearCanvas( c,eraseColor.css('background-color') );
+  });
+
+  $( '#undo' ).click(function(e){
+    e.preventDefault();
+    undo(c);
+  });
+
+  $( '.colors' ).click(function(e){
+    e.preventDefault();
+    chooseColor.css( 'background-color' , $(this).css( 'background-color' ) );
+    $( '#color-picker' ).minicolors( 'value' , chooseColor.css( 'background-color' ) );
+  });
+
+
+  $( '.color' ).click(function(e){
+    e.preventDefault();
+    chooseColor.css( 'border' , '1px solid #000' );
+    chooseColor = $(this);
+    chooseColor.css( 'border' , '1px solid #F00' );
+    $( '#color-picker' ).minicolors( 'value' , chooseColor.css( 'background-color' ) );
+  });
+
+  $('#line').slider().on('slide' , function(e){  
+    $( '#lineWidth' ).text( e.value );
+  });
+
+  $('#save').click(function() {
+    var buf = toBinary( canvas );   
+
+    var blob = new Blob( [buf.buffer], {
+      type: 'image/png'
+    });
+  
+    var link = document.createElement( 'a' );
+    link.href = window.URL.createObjectURL( blob );
+
+    link.download = "tegaki_du_" + moment().format("YYYYMMDDHHmmss", new Date()) +  ".png";
+    link.click();
+  
+  });
+
+  $( '#upload' ).click(function(){
+    
+    var buf = toBinary( canvas );   
+
+    var blob = new Blob( [buf.buffer], {
+      type: 'image/png'
+    });
+    
+    var fd = new FormData();
+    fd.append( "illust" , blob );
+    fd.append( "title" , $( "title" ).val() );
+    fd.append( "caption" , $( "caption" ).val() );
+    fd.append( "tags" , $("tags").val() );
+    fd.append( "tegaki" , "tegaki" );
+    $.ajax({
+      url:"/uploadillust",
+      type: "POST",
+      contentType: false,
+      processData: false,
+      data:fd,
+      success: function( result ){
+        var link = document.createElement( 'a' );
+        link.href = result.redirect;
+        link.click();
+      }
+    });
+
+  });
+
+  $('#color-picker').minicolors({
+    changeDelay: 10,
+    inline:true,
+    change:function(value,opacity){
+      if(!value)return;
+      chooseColor.css( 'background-color' , value );
+    },
+    theme:'bootstrap'
+  });
+  Mousetrap.bind('ctrl+z', function(){
+    undo(c);
+  });
+
+  $( '#switch' ).click( function(e){
+    if ( !confirm( "本当に切り替えますか？\n(描いてる途中の絵は破棄されます)" ) )return;
+    e.preventDefault();
+    
+    
+    if ( canvas.width == 640 ){
+      canvas.width = 480;
+      canvas.height = 640;
+    }else {
+      canvas.width = 640;
+      canvas.height = 480;
+    }
+    clearCanvas( c,eraseColor.css('background-color') );
+  });
+
+});
+function clearCanvas(c,color){
+  c.fillStyle= color;
+  c.fillRect( 0,0,canvas.width,canvas.height );
+}
+function undo(c){
+  var bufImage = c.getImageData(0,0,canvas.width,canvas.height);
+  c.putImageData( preImage,0,0 );
+  preImage = bufImage;
+};
+
+function toBinary(canvas) {
+  var base64 = canvas.toDataURL('image/png'),
+  bin = atob(base64.replace(/^.*,/, '')),
+  buffer = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) {
+    buffer[i] = bin.charCodeAt(i);
+  }
+  return buffer;
+}
+
+
+function toBlob() {
+   var base64 = canvas.toDataURL('image/png');
+    // Base64からバイナリへ変換
+    var bin = atob(base64.replace(/^.*,/, ''));
+    var buffer = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) {
+    buffer[i] = bin.charCodeAt(i);
+  }
+  // Blobを作成
+  var blob = new Blob([buffer.buffer], {
+    type: type
+  });
+  return blob;
+}
