@@ -106,7 +106,7 @@ $(function(){
     link.href = window.URL.createObjectURL( blob );
 
     link.download = "tegaki_du_" + moment().format("YYYYMMDDHHmmss", new Date()) +  ".png";
-    link.click();
+    link.dispatchEvent( new CustomEvent('click') );
   
   });
 
@@ -137,6 +137,7 @@ $(function(){
       success: function( result ){
         var link = document.createElement( 'a' );
         link.href = result.redirect;
+        link.setAttribute("target", "_blank");
         link.click();
       }
     });
