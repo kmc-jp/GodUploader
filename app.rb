@@ -232,8 +232,6 @@ post '/uploadillust' do
         File.open( save_path , 'wb' ) do |f|
           f.write params[:illust][:tempfile].read
         end
-        
-        p params[:isslack]
 
         if params[:isslack] then
           if params[:channel] != nil then

@@ -106,7 +106,7 @@ $(function(){
     link.href = window.URL.createObjectURL( blob );
 
     link.download = "tegaki_du_" + moment().format("YYYYMMDDHHmmss", new Date()) +  ".png";
-    link.click();
+    link.dispatchEvent( new CustomEvent('click') );
   
   });
 
@@ -124,10 +124,6 @@ $(function(){
     fd.append( "caption" , $( "input[name=caption]" ).val() );
     fd.append( "tags" , $("input[name=tags]").val() );
     fd.append( "tegaki" , "tegaki" );
-    if($("input[name=isslack]").prop('checked')){
-      fd.append( "isslack" , "on" );
-    }
-    fd.append( "channel" , $( "input[name=channel]" ).val() );
     $.ajax({
       url:"<%= uri( '/uploadillust' , false) %>",
       type: "POST",
@@ -137,6 +133,7 @@ $(function(){
       success: function( result ){
         var link = document.createElement( 'a' );
         link.href = result.redirect;
+        link.setAttribute("target", "_blank");
         link.click();
       }
     });
