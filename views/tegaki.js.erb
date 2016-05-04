@@ -124,6 +124,10 @@ $(function(){
     fd.append( "caption" , $( "input[name=caption]" ).val() );
     fd.append( "tags" , $("input[name=tags]").val() );
     fd.append( "tegaki" , "tegaki" );
+    if($("input[name=isslack]").prop('checked')){
+      fd.append( "isslack" , "on" );
+    }
+    fd.append( "channel" , $( "input[name=channel]" ).val() );
     $.ajax({
       url:"<%= uri( '/uploadillust' , false) %>",
       type: "POST",
