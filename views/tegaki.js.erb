@@ -11,13 +11,18 @@ $(function(){
   chooseColor.css( 'border' , '1px solid #F00' );
   var eraseColor = $( '#color2' );
   canvas = $( 'canvas' ).get(0);
-  if ( canvas.getContext ){
-    var c = canvas.getContext( '2d' ); 
+
+  var initCanvas = function(c){
     c.lineJoin = 'round';
     c.lineCap  = 'round';
     clearCanvas( c,eraseColor.css('background-color') );
     preImage = c.getImageData( 0,0,canvas.width,canvas.height ); 
-  }
+  };
+
+  if ( canvas.getContext ){
+    var c = canvas.getContext( '2d' ); 
+    initCanvas(c);
+ }
 
   $( 'canvas' ).mousedown( function(e){
 
@@ -169,7 +174,7 @@ $(function(){
       canvas.width = 640;
       canvas.height = 480;
     }
-    clearCanvas( c,eraseColor.css('background-color') );
+    initCanvas(c);
   });
 
 });
