@@ -220,7 +220,11 @@ post '/uploadillust' do
           end
         end
 
-        illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
+        if params[:tegaki] then
+          illust.filename = illust.id.to_s + ".png"
+        else 
+          illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
+        end
         illust.save       
 
         if !File.exists?( 'public/illusts' )
@@ -233,8 +237,6 @@ post '/uploadillust' do
           f.write params[:illust][:tempfile].read
         end
         
-        p params[:isslack]
-
         if params[:isslack] then
           if params[:channel] != nil then
             upload_post( params[:channel] , illust )
