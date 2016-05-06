@@ -49,7 +49,7 @@
       <div class="row">
           <% @illust.comments.order( "created_at DESC" ).each do |c| %>
             <div class="col-md-12">
-              <p><a href="<%= uri( '/users/' + c.account.kmcid,false ) %>"><%= c.account.name %></a> > <%= c.text %> -( <%= c.created_at.to_s %> )</p>
+              <p><a href="<%= uri( '/users/' + c.account.kmcid,false ) %>"><%= c.account.name %></a> > <%= c.text %> -( <%= c.created_at.strftime( "%Y/%m/%d %H:%M:%S" ) %> )</p>
             </div>
           <% end %>
       </div>
