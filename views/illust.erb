@@ -3,10 +3,12 @@
   <div class="panel panel-default">
     <div class="panel-heading" >
       <div class="row">
+        <div class="col-md-12">
         <h2 class="text-center"><%= @illust.title %></h2>
         <p class="text-center" ><%= @illust.caption %></p>
         <p class="text-center"><a href="<%= uri( '/users/'+ @illust.account.kmcid,false ) %>" ><%= @illust.account.name %></a>
         <p class="text-center"><%= @illust.created_at.strftime("%Y年%m月%d日 %H時%M分%S秒") %></p>
+        </div>
       </div>
       <% if kmcid == @illust.account.kmcid then %>
      	<div class="row">
@@ -36,7 +38,7 @@
       <div class="row">
         <form method="post" action="<%= uri('/illust/' + @illust.id.to_s + '/comment',false ) %>" >
           <div class="col-md-10">
-            <input type="text" name="comment" class="form-control" >
+            <input type="text" name="comment" class="form-control" maxlength="256" >
           </div>
           <div class="col-md-2">
             <button type="submit" class="btn btn-primary col-md-12" >コメント</button>
