@@ -368,8 +368,12 @@ get '/' do
   
   @newerillusts = Illust.order( ":created_at DESC" ).limit(8)
 
-  p @accounts
+  a = user
+  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.illust.account.kmcid == kmcid }
 
+  a.lastlogin = Time.now
+  a.save
+  
   erb :index
 
 end
