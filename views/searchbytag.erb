@@ -2,7 +2,7 @@
 
   <div class="panel panel-default">
     <div class="panel-heading" >
-      <h2>タグ"<%= @tag.name %>"の神絵たち</p>
+      <h2>タグ"<%= @tag.name %>"の絵たち</p>
     </div>
     <div class="panel-body">
       <div class="row"> 
@@ -15,7 +15,7 @@
                 <img style="width:auto;height:50%;"  src="<%= uri( "./illusts/" + i.filename , false ) %>">
               <% end %>
               <div class="caption" style="width:auto;height:50%">
-                <h2><%= i.title  %></h2>
+                <h3><%= i.title  %></h3>
                 <p><%= i.account.name %></p>
                 <p><%= i.caption %></p>
               </div>

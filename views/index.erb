@@ -2,7 +2,7 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h2 class="text-center">最新<%= @newerillusts.count.to_s %>件の神絵</h2>
+      <h2 class="text-center">最新<%= @newerillusts.count.to_s %>件の絵</h2>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -15,7 +15,7 @@
                   <img style="width:auto;height:50%;"  src="<%= uri( "./illusts/" + i.filename , false ) %>"  >
                 <% end %>
               <div class="caption" style="width:auto;height:20%">
-                <h2><%= i.title  %></h2>
+                <h3><%= i.title  %></h3>
                 <p><%= i.account.name %></p>
                 <p><%= i.caption %></p>
               </div>
@@ -28,13 +28,17 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h2 class="text-center">神絵師達</h2>
+      <h2 class="text-center">利用者達</h2>
     </div>
     <div class="panel-body">
       <div class="row">
-        <% @accounts.each do |a| %>
-          <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-primary col-md-3" ><%= a.name %></a>
-        <% end %>
+        <div class="col-md-12">
+          <% @accounts.each do |a| %>
+            <div class="col-md-3">
+              <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.illusts.count%>)</a>
+            </div>
+          <% end %>
+        </div>
        </div>
     </div>
   </div>
