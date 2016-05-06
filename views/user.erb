@@ -3,7 +3,7 @@
 
   <div class="jumbotron">
     <div class="row">
-      <p class="text-center"><%= @user.name %>の神絵置場</p>
+      <p class="text-center"><%= @user.name %>の作品置場</p>
     </div>
     <div class="row">
       <!-- モーダルウィンドウを呼び出すボタン -->
@@ -14,9 +14,6 @@
   </div>
   
   <div class="panel panel-default">
-    <div class="panel-heading" >
-      <p>神絵たち</p>
-    </div>
     <div class="panel-body">
       <div class="row"> 
         <% @user.illusts.order( "created_at DESC" ).each do |i| %>
@@ -28,7 +25,7 @@
                   <img style="width:auto; height:50%;"  src="<%= uri( "./illusts/" + i.filename , false ) %>"  >
                 <% end %>
               <div class="caption" style="width:auto;height=50%;">
-                <h2><%= i.title  %></h2>
+                <h3><%= i.title  %></h3>
                 <p><%= i.caption %></p>
               </div>
             </a>
@@ -48,7 +45,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">神絵師情報の編集</h4>
+        <h4 class="modal-title">絵師情報の編集</h4>
       </div>
       <div class="modal-body">
         <form method="POST" action="<%= uri( '/changeusersettings',false ) %>" >
