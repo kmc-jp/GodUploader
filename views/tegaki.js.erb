@@ -24,6 +24,18 @@ $(function(){
     initCanvas(c);
  }
 
+  var beforeunload_on = function(){
+    $(window).on('beforeunload', function() {
+       return 'このページを離れると絵は破棄されます。';
+    });
+  }
+
+  var beforunload_off = function(){
+    $(window).off( "beforunload" )();
+  }
+
+  beforeunload_on();
+
   $( 'canvas' ).mousedown( function(e){
 
     drawFlag = true;
@@ -70,7 +82,7 @@ $(function(){
   });
 
   $( '#clear' ).click(function(e){
-    if ( !confirm('本当に全て消してしまいますか？') )return;
+    if ( !confirm('本当に全て消してしまいますか?\n(現在の背景色で塗りつぶします。)') )return;
     e.preventDefault();
     preImage = c.getImageData( 0,0,canvas.width,canvas.height);
     clearCanvas( c,eraseColor.css('background-color') );
