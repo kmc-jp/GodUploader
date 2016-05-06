@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429042520) do
+ActiveRecord::Schema.define(version: 20160506115113) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "kmcid"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.time     "lastlogin"
   end
 
   create_table "comments", force: :cascade do |t|
