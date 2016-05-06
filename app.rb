@@ -75,6 +75,7 @@ helpers do
   def kmcid 
     if request.env["REMOTE_USER"] == nil then
        "unknown_user"
+       #"hoge"
     else 
       request.env["REMOTE_USER"]
     end
