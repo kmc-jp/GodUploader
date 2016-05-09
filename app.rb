@@ -9,6 +9,7 @@ require './models/illust_tag.rb'
 require './models/account.rb'
 require './models/tag.rb'
 require './models/comment.rb'
+require './models/like.rb'
 require 'erubis'
 
 set :erb, :escape_html => true
