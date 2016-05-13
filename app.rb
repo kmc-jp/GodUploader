@@ -9,6 +9,7 @@ require './models/illust_tag.rb'
 require './models/account.rb'
 require './models/tag.rb'
 require './models/comment.rb'
+require './models/like.rb'
 require 'erubis'
 
 set :erb, :escape_html => true
@@ -75,7 +76,8 @@ helpers do
   def kmcid 
     if request.env["REMOTE_USER"] == nil then
        "unknown_user"
-       #"hoge"
+        "hoge"
+       #"piyo"
     else 
       request.env["REMOTE_USER"]
     end
@@ -202,6 +204,29 @@ end
 
 get '/tegaki' do
   erb :tegaki
+end
+
+post '/like' do
+
+  u = user
+  illust = Illust.find_by_id( params[:id].to_s )
+
+  if u != nil and illust != nil then
+    
+    if illust.likes.exists?( :account_id  => u.id ) then
+      like = illust.likes.find_by_account_id( u.id )
+      like.destroy
+    else
+      like = illust.likes.build()
+      like.account = u
+    end
+  
+    like.save
+  
+  end
+
+  redirect "/illust/" + params[:id]
+
 end
 
 post '/uploadillust' do
@@ -372,6 +397,14 @@ get '/' do
   a = user
   @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.illust.account.kmcid == kmcid }
 
+  @newlikes = []
+  a.illusts.each do |i|
+    likes =  i.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.illust.account.kmcid == kmcid }
+    if likes.count > 0 then
+      @newlikes.push( [i,likes] )
+    end
+  end
+  p @newlikes
   a.lastlogin = Time.now
   a.save
   

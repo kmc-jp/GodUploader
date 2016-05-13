@@ -1,3 +1,17 @@
+<script type="text/javascript" src="<%= uri( '/js/jquery.balloon.js', false )%>"></script>
+
+<script>
+
+$(function(){
+ 
+  $.each($(".heart"), function(i, val) {
+    $(val).balloon( {contents:$(val).data('user') } );
+  });
+
+});
+
+</script>
+
 <div class="container">
 
   <div class="panel panel-default">
@@ -12,8 +26,10 @@
       </div>
       <% if kmcid == @illust.account.kmcid then %>
      	<div class="row">
-       	   <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#editModal">情報の編集</button>
-        </div>
+         <div class="col-md-12">
+       	  <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#editModal">情報の編集</button>
+         </div>
+       </div>
       <% end %>
     </div>
     <div class="panel-body">
@@ -27,6 +43,40 @@
             <%# <li><button class="btn btn-primary">編集</button></li>%>
           </ul>
       </div>
+
+       
+      <div class="row">
+
+        <div class="col-md-12">
+          
+          <div class="col-md-12">
+            <p class="pull-right" >(<%= @illust.likes.count %>)</p>
+             
+            <% @illust.likes.each do |l| %>
+            
+              <a href="<%= uri( '/users/' + l.account.kmcid ,false ) %>">
+                <span class="glyphicon glyphicon-heart pull-right heart" data-user="<%= l.account.kmcid %>" <% if l.account.id == user.id then %><%= "style='color:red;'" %><%end%> ></span>
+              </a> 
+          
+            <% end %>
+            
+          
+          </div>
+ 
+          <% if @illust.account.id != user.id and !@illust.likes.exists?( :account_id => user.id )then %>
+            
+            <div class="col-md-12" >
+              <form method="post" action="<%= uri( '/like',false ) %>" >
+                <input type="hidden" value="<%= @illust.id %>" name="id" >
+                <button type="submit" class="btn btn-default pull-right" >よさ</button>
+              </form>
+            </div>
+
+          <% end %>
+
+        </div>
+      </div>
+      
       <div class="row"> 
         <div class="col-md-12">
           <a href="<%= uri( "./illusts/" + @illust.filename , false ) %>" >
@@ -41,7 +91,7 @@
             <input type="text" name="comment" class="form-control" maxlength="256" >
           </div>
           <div class="col-md-2">
-            <button type="submit" class="btn btn-primary col-md-12" >コメント</button>
+            <button type="submit" class="btn btn-primary btn-block" >コメント</button>
           </div>
         </form>
       </div>

@@ -21,6 +21,35 @@
   </div>
 <%end%>
 
+<% if @newlikes.count > 0 %>
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-12">
+        <h2 class="text-center">新たなよさがついています！</h2>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <% @newlikes.each do |l| %>
+            <p>
+              <% illust = l.first %>
+              <a href="<%=uri( '/illust/' + illust.id.to_s , false ) %>"><%= illust.title %></a> : 
+
+              <% l.pop.each do |u| %>
+                <a href="<%= uri( '/users/' + u.account.kmcid,false ) %>"><%= u.account.name %></a> 
+              <% end %>
+            </p> 
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<%end%>
+
+
   <div class="panel panel-default">
     <div class="panel-heading">
       <h2 class="text-center">最新<%= @newerillusts.count.to_s %>件の絵</h2>

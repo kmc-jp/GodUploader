@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160506132413) do
+ActiveRecord::Schema.define(version: 20160509181031) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "kmcid"
@@ -43,6 +43,13 @@ ActiveRecord::Schema.define(version: 20160506132413) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "account_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "account_id"
+    t.integer  "illust_id"
   end
 
   create_table "tags", force: :cascade do |t|
