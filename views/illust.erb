@@ -50,6 +50,7 @@ $(function(){
         <div class="col-md-12">
           
           <div class="col-md-12">
+            <p class="pull-right" >(<%= @illust.likes.count %>)</p>
              
             <% @illust.likes.each do |l| %>
             
@@ -58,16 +59,16 @@ $(function(){
               </a> 
           
             <% end %>
+            
           
           </div>
  
-          <% if @illust.account.id != user.id then %>
+          <% if @illust.account.id != user.id and !@illust.likes.exists?( :account_id => user.id )then %>
             
             <div class="col-md-12" >
               <form method="post" action="<%= uri( '/like',false ) %>" >
                 <input type="hidden" value="<%= @illust.id %>" name="id" >
-                <button type="submit" class="btn btn-default pull-right" >よさ <%= @illust.likes.count %>
-                </button>
+                <button type="submit" class="btn btn-default pull-right" >よさ</button>
               </form>
             </div>
 
