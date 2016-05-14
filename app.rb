@@ -76,7 +76,7 @@ helpers do
   def kmcid 
     if request.env["REMOTE_USER"] == nil then
        "unknown_user"
-        "hoge"
+       #"hoge"
        #"piyo"
     else 
       request.env["REMOTE_USER"]
@@ -225,7 +225,7 @@ post '/like' do
   
   end
 
-  redirect "/illust/" + params[:id]
+  redirect uri( "/illust/" + params[:id] , false )
 
 end
 
