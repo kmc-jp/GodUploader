@@ -135,7 +135,7 @@ helpers do
 
     data = {
             "username" => "GodIllustUploader",
-            "icon_emoji" => ":pixiv:",
+            "icon_emoji" => ":godicon:",
             "channel" => "#" + channel,
             "text"=> illust.account.name + "が新たな絵をアップロードなさいました！",
             "attachments"=> [
