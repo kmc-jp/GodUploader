@@ -10,6 +10,7 @@ gem 'rake'
 gem 'erubis'
 gem 'twitter'
 gem 'slack-api'
+gem 'gyazo'
 
 group :production do
   gem 'sqlite3'

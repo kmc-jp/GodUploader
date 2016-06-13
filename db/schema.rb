@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160509181031) do
+ActiveRecord::Schema.define(version: 20160613162145) do
 
   create_table "accounts", force: :cascade do |t|
     t.string   "kmcid"
@@ -27,6 +27,23 @@ ActiveRecord::Schema.define(version: 20160509181031) do
     t.datetime "updated_at"
     t.integer  "account_id"
     t.integer  "illust_id"
+    t.integer  "folder_id"
+  end
+
+  create_table "folders", force: :cascade do |t|
+    t.string   "title"
+    t.string   "caption"
+    t.string   "outurl"
+    t.integer  "account_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "folderstags", force: :cascade do |t|
+    t.integer  "folder_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "illust_tags", force: :cascade do |t|
@@ -43,6 +60,7 @@ ActiveRecord::Schema.define(version: 20160509181031) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "account_id"
+    t.integer  "folder_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -50,12 +68,14 @@ ActiveRecord::Schema.define(version: 20160509181031) do
     t.datetime "updated_at"
     t.integer  "account_id"
     t.integer  "illust_id"
+    t.integer  "folder_id"
   end
 
   create_table "tags", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "folder_id"
   end
 
 end
