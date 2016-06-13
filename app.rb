@@ -30,7 +30,7 @@ configure do
   :secret => 'changeme'
 end 
 
-set :public, File.dirname(__FILE__) + '/public'
+# set :public, File.dirname(__FILE__) + '/public'
 
 #便利品
 helpers do
