@@ -281,7 +281,7 @@ post '/uploadillust' do
            
             if params[:isgyazo] then
               
-              gyazo = Gyazo::Client.new '1b6fae3648c1363cf5aeae9a37a1d09c6611d3ce9e0ed10f067cb0062e518204'
+              gyazo = Gyazo::Client.new 'c858d85185760f3f89370fad90e66540baeb61234a8d036f0d301316331f7737'
               gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
               res = gyazo.upload gyazo_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
 
