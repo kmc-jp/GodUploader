@@ -18,13 +18,13 @@ $(function(){
     <div class="panel-heading" >
       <div class="row">
         <div class="col-md-12">
-        <h2 class="text-center"><%= @illust.title %></h2>
-        <p class="text-center" ><%= @illust.caption %></p>
-        <p class="text-center"><a href="<%= uri( '/users/'+ @illust.account.kmcid,false ) %>" ><%= @illust.account.name %></a>
-        <p class="text-center"><%= @illust.created_at.strftime("%Y年%m月%d日 %H時%M分%S秒") %></p>
+        <h2 class="text-center"><%= @folder.title %></h2>
+        <p class="text-center" ><%= @folder.caption %></p>
+        <p class="text-center"><a href="<%= uri( '/users/'+ @folder.account.kmcid,false ) %>" ><%= @folder.account.name %></a>
+        <p class="text-center"><%= @folder.created_at.strftime("%Y年%m月%d日 %H時%M分%S秒") %></p>
         </div>
       </div>
-      <% if kmcid == @illust.account.kmcid then %>
+      <% if kmcid == @folder.account.kmcid then %>
      	<div class="row">
          <div class="col-md-12">
        	  <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#editModal">情報の編集</button>
@@ -37,7 +37,7 @@ $(function(){
       <div class="row">
           <ul class="breadcrumb">
             <li>タグ</li>
-            <% @illust.tags.each do |t| %>
+            <% @folder.tags.each do |t| %>
             <li><a href="<%= uri( '/searchbytag/' + t.id.to_s ,false ) %>"><%= t.name %></a></li>
             <% end %>
             <%# <li><button class="btn btn-primary">編集</button></li>%>
@@ -50,9 +50,9 @@ $(function(){
         <div class="col-md-12">
           
           <div class="col-md-12">
-            <p class="pull-right" >(<%= @illust.likes.count %>)</p>
+            <p class="pull-right" >(<%= @folder.likes.count %>)</p>
              
-            <% @illust.likes.each do |l| %>
+            <% @folder.likes.each do |l| %>
             
               <a href="<%= uri( '/users/' + l.account.kmcid ,false ) %>">
                 <span class="glyphicon glyphicon-heart pull-right heart" data-user="<%= l.account.kmcid %>" <% if l.account.id == user.id then %><%= "style='color:red;'" %><%end%> ></span>
@@ -63,11 +63,11 @@ $(function(){
           
           </div>
  
-          <% if @illust.account.id != user.id and !@illust.likes.exists?( :account_id => user.id )then %>
+          <% if @folder.account.id != user.id and !@folder.likes.exists?( :account_id => user.id )then %>
             
             <div class="col-md-12" >
               <form method="post" action="<%= uri( '/like',false ) %>" >
-                <input type="hidden" value="<%= @illust.id %>" name="id" >
+                <input type="hidden" value="<%= @folder.id %>" name="id" >
                 <button type="submit" class="btn btn-default pull-right" >よさ</button>
               </form>
             </div>
@@ -77,16 +77,39 @@ $(function(){
         </div>
       </div>
       
-      <div class="row"> 
+      <div class="row">
         <div class="col-md-12">
-          <a href="<%= uri( "./illusts/" + @illust.filename , false ) %>" >
-            <img src="<%= uri( "./illusts/" + @illust.filename , false ) %>" class="img-responsive center-block" >
-          </a>
+
+          <% if @folder.illusts.length == 1 %>
+            <a href="<%= uri( "./illusts/" + @folder.illusts.first.filename , false ) %>" >
+              <img src="<%= uri( "./illusts/" +@folder.illusts.first.filename , false ) %>" class="center-block" >
+            </a>
+            
+          <% elsif @folder.illusts.length > 1 %>
+            <div id="illusts-carousel" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <% @folder.illusts.each_with_index do |illust , i| %>
+                  
+                  <% if i == 0 then %> <div class="item active"><% else %><div class="item"><% end %>
+                    <a href="<%= uri( "./folder/" + @folder.id.to_s , false ) %>" >
+                      <img src="<%= uri( "./illusts/" +illust.filename , false ) %>" class="center-block" >
+                    </a>
+                  </div>
+                <% end %>
+              </div>
+            <a class="left carousel-control" href="#illusts-carousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#illusts-carousel"  data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+            </div>
+          <% end %>
         </div>
       </div>
       
       <div class="row">
-        <form method="post" action="<%= uri('/illust/' + @illust.id.to_s + '/comment',false ) %>" >
+        <form method="post" action="<%= uri('/illust/' + @folder.id.to_s + '/comment',false ) %>" >
           <div class="col-md-10">
             <input type="text" name="comment" class="form-control" maxlength="256" >
           </div>
@@ -97,7 +120,7 @@ $(function(){
       </div>
 
       <div class="row">
-          <% @illust.comments.order( "created_at DESC" ).each do |c| %>
+          <% @folder.comments.order( "created_at DESC" ).each do |c| %>
             <div class="col-md-12">
               <p><a href="<%= uri( '/users/' + c.account.kmcid,false ) %>"><%= c.account.name %></a> > <%= c.text %> -( <%= c.created_at.strftime( "%Y/%m/%d %H:%M:%S" ) %> )</p>
             </div>
@@ -107,7 +130,7 @@ $(function(){
     </div>
   </div> 
 
-  <% if kmcid == @illust.account.kmcid then %>
+  <% if kmcid == @folder.account.kmcid then %>
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
@@ -131,7 +154,7 @@ $(function(){
       </div>
       <div class="modal-body">
         <p>この神絵を削除しますか？</p>
-        <form action="<%= uri( '/deleteillust/' + @illust.id.to_s,false ) %>" method="POST" >
+        <form action="<%= uri( '/deleteillust/' + @folder.id.to_s,false ) %>" method="POST" >
           <div class="form-group">
             <button type="submit" class="btn btn-danger form-control" >削除する</button>
           </div>
@@ -146,11 +169,11 @@ $(function(){
 
 <script>
 $(function(){
-  $( "input[name=title]" ).val( "<%= @illust.title %>" );
-  $( "input[name=caption]" ).val( "<%= @illust.caption %>" );
+  $( "input[name=title]" ).val( "<%= @folder.title %>" );
+  $( "input[name=caption]" ).val( "<%= @folder.caption %>" );
 
   <% tags = [] %>
-  <% @illust.tags.each do |t|  %>
+    <% @folder.tags.each do |t|  %>
   <% tags.push( t.name ) %>
   <% end %>
   
@@ -166,7 +189,7 @@ $(function(){
         <h4 class="modal-title">神絵の情報編集</h4>
       </div>
       <div class="modal-body">
-        <form action="<%= uri('/editillust/'+@illust.id.to_s ,false) %>" method="POST" >
+        <form action="<%= uri('/editillust/'+@folder.id.to_s ,false) %>" method="POST" >
 
           <%== erb :illustinfoform %>
 
