@@ -136,13 +136,16 @@ $(function(){
     });
     
     var fd = new FormData();
-    fd.append( "illust" , blob );
+    fd.append( "illusts[]" , blob );
     fd.append( "title" , $( "input[name=title]" ).val() );
     fd.append( "caption" , $( "input[name=caption]" ).val() );
     fd.append( "tags" , $("input[name=tags]").val() );
     fd.append( "tegaki" , "tegaki" );
     if($("input[name=isslack]").prop('checked')){
       fd.append( "isslack" , "on" );
+    }
+    if($("input[name=isgyazo]").prop('checked')){
+      fd.append( "isgyazo" , "on" );
     }
     fd.append( "channel" , $( "input[name=channel]" ).val() );
     $.ajax({

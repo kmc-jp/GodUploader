@@ -79,9 +79,32 @@ $(function(){
       
       <div class="row">
         <div class="col-md-12">
-          <a href="<%= uri( "./folder/" + @folder.id.to_s , false ) %>" >
-            <img src="<%= uri( "./illusts/" + @folder.illusts.first.filename , false ) %>" class="img-responsive center-block" >
-          </a>
+
+          <% if @folder.illusts.length == 1 %>
+            <a href="<%= uri( "./illusts/" + @folder.illusts.first.filename , false ) %>" >
+              <img src="<%= uri( "./illusts/" +@folder.illusts.first.filename , false ) %>" class="center-block" >
+            </a>
+            
+          <% elsif @folder.illusts.length > 1 %>
+            <div id="illusts-carousel" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <% @folder.illusts.each_with_index do |illust , i| %>
+                  
+                  <% if i == 0 then %> <div class="item active"><% else %><div class="item"><% end %>
+                    <a href="<%= uri( "./folder/" + @folder.id.to_s , false ) %>" >
+                      <img src="<%= uri( "./illusts/" +illust.filename , false ) %>" class="center-block" >
+                    </a>
+                  </div>
+                <% end %>
+              </div>
+            <a class="left carousel-control" href="#illusts-carousel" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#illusts-carousel"  data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+            </div>
+          <% end %>
         </div>
       </div>
       
