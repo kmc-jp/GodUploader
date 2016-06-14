@@ -238,7 +238,7 @@ end
 post '/uploadillust' do
   
   folder = user.folders.build( title:params[:title] , caption:params[:caption] )
-  if params[:illust]
+  if params[:illusts]
     
       if folder.save 
 
@@ -252,38 +252,48 @@ post '/uploadillust' do
           end
         end
 
-        illust = folder.illusts.create
+        params[:illusts].each do |buf|
+          illust = folder.illusts.create
 
-        if params[:tegaki] then
-          illust.filename = illust.id.to_s + ".png"
-        else 
-          illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
+          if params[:tegaki] then
+            illust.filename = illust.id.to_s + ".png"
+          else 
+            illust.filename = illust.id.to_s + "." + buf[:filename].split('.').last
+          end
+          illust.save       
+
+          if !File.exists?( 'public/illusts' )
+            Dir.mkdir( 'public/illusts' )
+          end
+
+          save_path = "./public/illusts/" + illust.filename
+
+          illustbin = buf[:tempfile].read
+          File.open( save_path , 'wb' ) do |f|
+            f.write illustbin
+          end
+
         end
-        illust.save       
-
-        if !File.exists?( 'public/illusts' )
-          Dir.mkdir( 'public/illusts' )
-        end
-
-        save_path = "./public/illusts/" + illust.filename
-
-        illustbin = params[:illust][:tempfile].read
-        File.open( save_path , 'wb' ) do |f|
-          f.write illustbin
-        end
-
-      
-        gyazo = Gyazo::Client.new '1b6fae3648c1363cf5aeae9a37a1d09c6611d3ce9e0ed10f067cb0062e518204'
-        res = gyazo.upload save_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
-
-        folder.outurl = res[ 'url' ]
-        folder.save
-        
 
         if params[:isslack] then
+          
           if params[:channel] != nil then
+           
+            if params[:isgyazo] then
+              
+              gyazo = Gyazo::Client.new '1b6fae3648c1363cf5aeae9a37a1d09c6611d3ce9e0ed10f067cb0062e518204'
+              gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
+              res = gyazo.upload gyazo_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
+
+              folder.outurl = res[ 'url' ]
+              folder.save
+        
+            end
+            
             upload_post( params[:channel] , folder )
+          
           end
+        
         end
     end
   end  
@@ -344,6 +354,24 @@ get '/illust/:id' do
     @folder = Folder.find_by_id( params[:id].to_i )
 
     erb :illust
+  
+  else
+  
+    erb :deletedillust
+  
+  end
+
+end
+
+get '/folder/:id' do
+
+  create_account
+
+  if Folder.exists?( :id => params[:id].to_i )
+
+    @folder = Folder.find_by_id( params[:id].to_i )
+
+    erb :folder
   
   else
   

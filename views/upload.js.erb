@@ -1,18 +1,19 @@
 $(function() {
 
-  $( '#selectillust' ).on('click', function() {
+//  $( '#selectillust' ).on('click', function() {
 
-    $('input[name=illust]').trigger('click');
+//    $('input[name=illust[]]').trigger('click');
 
-  });
+//  });
 
-  $( 'input[name=illust]' ).change(function() {
+//  $( 'input[name=illust[]]' ).change(function() {
 
-    var path = $(this).val().split('\\');
+//    console.log( $(this).val() );
+//    var path = $(this).val().split('\\');
 
-    $('#illustcover').val(path.pop());
+//    $('#illustcover').val(path.pop());
 
-  });
+//  });
 
   $('input[name= isslack]').change(function(){
     if ($(this).is(':checked')) {

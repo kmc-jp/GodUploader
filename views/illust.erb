@@ -77,9 +77,9 @@ $(function(){
         </div>
       </div>
       
-      <div class="row"> 
+      <div class="row">
         <div class="col-md-12">
-          <a href="<%= uri( "./illusts/" + @folder.illusts.first.filename , false ) %>" >
+          <a href="<%= uri( "./folder/" + @folder.id.to_s , false ) %>" >
             <img src="<%= uri( "./illusts/" + @folder.illusts.first.filename , false ) %>" class="img-responsive center-block" >
           </a>
         </div>
