@@ -79,7 +79,7 @@ helpers do
   def kmcid 
     if request.env["REMOTE_USER"] == nil then
        "unknown_user"
-       #"hoge"
+       "hoge"
        #"piyo"
     else 
       request.env["REMOTE_USER"]
@@ -443,12 +443,12 @@ get '/' do
   @newerillusts = Folder.joins(:illusts).order( ":created_at DESC" ).uniq.limit(8)
 
   a = user
-  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }
+  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
 
   @newlikes = []
   a.folders.each do |f|
     p f.illusts
-    likes =  f.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }
+    likes =  f.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
     if likes.count > 0 then
       @newlikes.push( [f,likes] )
     end
