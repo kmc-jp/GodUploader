@@ -35,6 +35,11 @@ end
 
 # set :public, File.dirname(__FILE__) + '/public'
 
+config = YAML.load_file( "config/config.yml" );
+
+ENV['gyazo_token'] = config[:gyazo_token]
+ENV['slack_url'] = config[:slack_url]
+
 #便利品
 helpers do
 
@@ -149,7 +154,7 @@ helpers do
               }
             ]
           }
-    request_url = "https://hooks.slack.com/services/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"
+    request_url = ENV['slack_url']
     uri = URI.parse(request_url)
     http = Net::HTTP.post_form(uri, {"payload" => data.to_json}) 
   end
@@ -280,8 +285,8 @@ post '/uploadillust' do
           if params[:channel] != nil then
            
             if params[:isgyazo] then
-              
-              gyazo = Gyazo::Client.new 'c858d85185760f3f89370fad90e66540baeb61234a8d036f0d301316331f7737'
+
+              gyazo = Gyazo::Client.new ENV['gyazo_token']
               gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
               res = gyazo.upload gyazo_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
 
