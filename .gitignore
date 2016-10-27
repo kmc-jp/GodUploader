@@ -43,3 +43,6 @@ build/
 
 # log
 *.log
+
+# token
+/config/config.yml
