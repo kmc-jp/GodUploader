@@ -8,9 +8,9 @@
       <div class="row">
         <div class="col-md-12" >
           <% @tags.each do |t| %>
-            <% if t.illusts.count > 0 then %>
+            <% if t.folders.count > 0 then %>
               <div class="col-md-3">
-                <a href="<%= uri( '/searchbytag/' + t.id.to_s ,false ) %>" type="button" class="btn btn-default btn-block" ><%= t.name %>( <%= t.illusts.count.to_s %> )</a>
+                <a href="<%= uri( '/searchbytag/' + t.id.to_s ,false ) %>" type="button" class="btn btn-default btn-block" ><%= t.name %>( <%= t.folders.count.to_s %> )</a>
               </div>
             <% end %>
           <% end %>

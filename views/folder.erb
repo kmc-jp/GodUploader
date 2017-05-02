@@ -1,0 +1,21 @@
+<div class="container">
+
+
+      <% @folder.illusts.each do |illust| %>
+   <div class="panel panel-default">
+   <div class="panel-body">
+
+       <div class="row">
+          <div class="col-md-12">
+            <a href="<%= uri( "./illusts/" + illust.filename , false ) %>" >
+              <img src="<%= uri( "./illusts/" + illust.filename , false ) %>" class="img-responsive center-block" >
+            </a>
+          </div>
+        </div>
+      </div>
+  </div> 
+
+     <% end %>
+</div>
+
+

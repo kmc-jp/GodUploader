@@ -4,12 +4,15 @@ require 'active_record'
 require "sinatra/reloader"
 require 'json'
 require 'net/http'
+require 'gyazo'
 require './models/illust.rb'
 require './models/illust_tag.rb'
 require './models/account.rb'
 require './models/tag.rb'
+require './models/folderstags.rb'
 require './models/comment.rb'
 require './models/like.rb'
+require './models/folder.rb'
 require 'erubis'
 
 set :erb, :escape_html => true
@@ -30,7 +33,12 @@ configure do
   :secret => 'changeme'
 end 
 
-set :public, File.dirname(__FILE__) + '/public'
+# set :public, File.dirname(__FILE__) + '/public'
+
+config = YAML.load_file( "config/config.yml" );
+
+ENV['gyazo_token'] = config[:gyazo_token]
+ENV['slack_url'] = config[:slack_url]
 
 #便利品
 helpers do
@@ -91,12 +99,12 @@ helpers do
     [ "R-18" , "R-18G" ]
   end
 
-  def ishide(illust)
+  def ishide(folder)
 
     flag = false
 
     hidetags.each do |t|
-      if illust.tags.exists?( :name => t ) then
+      if folder.tags.exists?( :name => t ) then
         flag = true
       end
     end
@@ -116,7 +124,7 @@ helpers do
   end
 
   def maxcaptionlength
-    "50"
+    "5000"
   end
   def maxtaglength
     "96"
@@ -126,10 +134,10 @@ helpers do
     "320px"
   end
 
-  def upload_post( channel , illust )
+  def upload_post( channel , folder )
 
     tags = []
-    illust.tags.each do |t|
+    folder.tags.each do |t|
       tags.push( t.name )
     end
 
@@ -137,18 +145,21 @@ helpers do
             "username" => "GodIllustUploader",
             "icon_emoji" => ":godicon:",
             "channel" => "#" + channel,
-            "text"=> illust.account.name + "が新たな絵をアップロードなさいました！",
+            "text"=> folder.account.name + "が新たな絵をアップロードなさいました！",
             "attachments"=> [
               {
-                "title" => illust.title,
-                "text" => illust.caption + "\n" + "タグ:" + tags.join(',') + "\n" + "URI:https://inside.kmc.gr.jp/godillustuploader/illust/" + illust.id.to_s
+                "title" => folder.title,
+                "text" => folder.caption + "\n" + "タグ:" + tags.join(',') + "\n" + "URI:https://inside.kmc.gr.jp/godillustuploader/illust/" + folder.id.to_s,
+                "image_url" => folder.outurl
               }
             ]
           }
-    request_url = "https://hooks.slack.com/services/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"
+    request_url = ENV['slack_url']
     uri = URI.parse(request_url)
     http = Net::HTTP.post_form(uri, {"payload" => data.to_json}) 
   end
+
+
 end
 
 get '/js/upload.js' do
@@ -191,7 +202,7 @@ get '/searchbytag/:tagid' do
   create_account
 
   @tag = Tag.find_by_id( params[:tagid] )
-  @illusts = @tag.illusts
+  @folders = @tag.folders
 
   erb :searchbytag
 
@@ -209,15 +220,15 @@ end
 post '/like' do
 
   u = user
-  illust = Illust.find_by_id( params[:id].to_s )
+  folder = Folder.find_by_id( params[:id].to_s )
 
-  if u != nil and illust != nil then
+  if u != nil and folder != nil then
     
-    if illust.likes.exists?( :account_id  => u.id ) then
-      like = illust.likes.find_by_account_id( u.id )
+    if folder.likes.exists?( :account_id  => u.id ) then
+      like = folder.likes.find_by_account_id( u.id )
       like.destroy
     else
-      like = illust.likes.build()
+      like = folder.likes.build()
       like.account = u
     end
   
@@ -231,60 +242,81 @@ end
 
 post '/uploadillust' do
   
-  illust = user.illusts.build( title:params[:title] , caption:params[:caption] )
-  if params[:illust]
+  folder = user.folders.build( title:params[:title] , caption:params[:caption] )
+  if params[:illusts]
     
-      if illust.save 
+      if folder.save 
 
         params[:tags].split(',').each do |t|
-          if !illust.tags.exists?( :name => t ) then
+          if !folder.tags.exists?( :name => t ) then
             if Tag.exists?( :name => t ) then
-              illust.tags << Tag.find_by_name(t)
+              folder.tags << Tag.find_by_name(t)
             else
-              illust.tags.create( name:t )
+              folder.tags.create( name:t )
             end
           end
         end
 
-        if params[:tegaki] then
-          illust.filename = illust.id.to_s + ".png"
-        else 
-          illust.filename = illust.id.to_s + "." + params[:illust][:filename].split('.').last
-        end
-        illust.save       
+        params[:illusts].each do |buf|
+          illust = folder.illusts.create
 
-        if !File.exists?( 'public/illusts' )
-          Dir.mkdir( 'public/illusts' )
-        end
- 
-        save_path = "./public/illusts/" + illust.filename
-  
-        File.open( save_path , 'wb' ) do |f|
-          f.write params[:illust][:tempfile].read
-        end
-        
-        if params[:isslack] then
-          if params[:channel] != nil then
-            upload_post( params[:channel] , illust )
+          if params[:tegaki] then
+            illust.filename = illust.id.to_s + ".png"
+          else 
+            illust.filename = illust.id.to_s + "." + buf[:filename].split('.').last
           end
+          illust.save       
+
+          if !File.exists?( 'public/illusts' )
+            Dir.mkdir( 'public/illusts' )
+          end
+
+          save_path = "./public/illusts/" + illust.filename
+
+          illustbin = buf[:tempfile].read
+          File.open( save_path , 'wb' ) do |f|
+            f.write illustbin
+          end
+
+        end
+
+        if params[:isslack] then
+          
+          if params[:channel] != nil then
+           
+            if params[:isgyazo] then
+
+              gyazo = Gyazo::Client.new ENV['gyazo_token']
+              gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
+              res = gyazo.upload gyazo_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
+
+              folder.outurl = res[ 'url' ]
+              folder.save
+        
+            end
+            
+            upload_post( params[:channel] , folder )
+          
+          end
+        
         end
     end
   end  
   
   if params[:tegaki] then
     content_type :json
-    data = { redirect: uri( "/illust/" + illust.id.to_s , false ) }
+    data = { redirect: uri( "/illust/" + folder.id.to_s , false ) }
     data.to_json
   else 
-    redirect uri( "/illust/" + illust.id.to_s , false )
+    redirect uri( "/illust/" + folder.id.to_s , false )
   end
 
 end
 
 post '/deleteillust/:id' do
 
-  if Illust.exists?( :id => params[:id].to_i ) then
-    Illust.find_by_id( params[:id].to_i ).destroy
+  if Folder.exists?( :id => params[:id].to_i ) then
+    Folder.find_by_id( params[:id].to_i ).destroy
   end
  
   redirect uri( "/users/" + kmcid , false )
@@ -293,24 +325,24 @@ end
 
 post '/editillust/:id' do
 
-  if Illust.exists?( :id => params[:id].to_i ) then
-    illust = Illust.find_by_id( params[:id].to_i )
+  if Folder.exists?( :id => params[:id].to_i ) then
+    folder = Folder.find_by_id( params[:id].to_i )
     
-    illust.title = params[:title]
-    illust.caption = params[:caption]
-    illust.tags.delete_all
+    folder.title = params[:title]
+    folder.caption = params[:caption]
+    folder.tags.delete_all
 
     params[:tags].split(',').each do |t|
-      if !illust.tags.exists?( :name => t ) then
+      if !folder.tags.exists?( :name => t ) then
         if Tag.exists?( :name => t ) then
-          illust.tags << Tag.find_by_name(t)
+          folder.tags << Tag.find_by_name(t)
         else
-          illust.tags.create( name:t )
+          folder.tags.create( name:t )
         end
       end
     end
 
-    illust.save
+    folder.save
 
   end
  
@@ -322,11 +354,29 @@ get '/illust/:id' do
 
   create_account
 
-  if Illust.exists?( :id => params[:id].to_i )
+  if Folder.exists?( :id => params[:id].to_i )
 
-    @illust = Illust.find_by_id( params[:id].to_i )
+    @folder = Folder.find_by_id( params[:id].to_i )
 
     erb :illust
+  
+  else
+  
+    erb :deletedillust
+  
+  end
+
+end
+
+get '/folder/:id' do
+
+  create_account
+
+  if Folder.exists?( :id => params[:id].to_i )
+
+    @folder = Folder.find_by_id( params[:id].to_i )
+
+    erb :folder
   
   else
   
@@ -344,15 +394,16 @@ get '/users/:kmcid' do
     redirect uri( '/mypage' , false )
   else 
     @user = Account.find_by_kmcid(params[:kmcid])
+    @folder = @user.folders
     erb :user
   end
 end 
 
 post '/illust/:id/comment' do
   
-  illust = Illust.find_by_id(params[:id].to_i)
+  folder = Folder.find_by_id(params[:id].to_i)
 
-  comment = illust.comments.build( text:params[:comment] )
+  comment = folder.comments.build( text:params[:comment] )
   comment.account = user
   comment.save
 
@@ -375,6 +426,8 @@ get '/mypage' do
   create_account
 
   @user = user
+  @folders = Folder.find_by_account_id( user.id )
+  
   erb :user
 
 end 
@@ -392,19 +445,20 @@ get '/' do
 
   @accounts = Account.all
   
-  @newerillusts = Illust.order( ":created_at DESC" ).limit(8)
+  @newerillusts = Folder.joins(:illusts).order( ":created_at DESC" ).select{ |f| !ishide(f) }.uniq.take(8)
 
   a = user
-  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.illust.account.kmcid == kmcid }
+  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
 
   @newlikes = []
-  a.illusts.each do |i|
-    likes =  i.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.illust.account.kmcid == kmcid }
+  a.folders.each do |f|
+    p f.illusts
+    likes =  f.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
     if likes.count > 0 then
-      @newlikes.push( [i,likes] )
+      @newlikes.push( [f,likes] )
     end
   end
-  p @newlikes
+
   a.lastlogin = Time.now
   a.save
   

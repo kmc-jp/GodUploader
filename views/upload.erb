@@ -9,13 +9,19 @@
     <div class="panel-body" id="illustupload">
 
       <form method="POST" action="<%= uri( '/uploadillust',false ) %>" enctype="multipart/form-data">
-        <input type="file" name="illust" accept="image/*"  required style="display:none;" >
         <div class="row">
           <div class="input-group">
-            <span class="input-group-btn">
+            <input type="file" name="illusts[]" accept="image/*"  required  multiple  >
+            
+            <%# 
+                <span class="input-group-btn">
               <button class="btn btn-default" type="button" id="selectillust"><i class="glyphicon glyphicon-folder-open"></i></button>
             </span>
             <input id="illustcover" type="text"class="form-control" placeholder="ファイルを選択してください。" disabled>        
+            %>
+          </div>
+          <div>
+            <p>最大で10MBまでのファイルをアップロードできます。</p>
           </div>
         </div>
 
