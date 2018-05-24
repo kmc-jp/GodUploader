@@ -2,6 +2,7 @@
 source "https://rubygems.org"
 
 # gem "rails"
+gem 'unf_ext', '~> 0.0.7.1'
 gem 'sinatra' 
 gem 'activerecord' 
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord' 
