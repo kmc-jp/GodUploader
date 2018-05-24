@@ -124,6 +124,7 @@ DEPENDENCIES
   slack-api
   sqlite3
   twitter
+  unf_ext (~> 0.0.7.1)
 
 BUNDLED WITH
    1.12.1

@@ -81,13 +81,17 @@ helpers do
     Rack::Utils.escape_html(text)
   end
 
+  def remote_user
+    request.env["REMOTE_USER"] || request.env['HTTP_X_FORWARDED_USER']
+  end
+
   def kmcid 
-    if request.env["REMOTE_USER"] == nil then
+    if remote_user == nil then
        "unknown_user"
        #"hoge"
        #"piyo"
     else 
-      request.env["REMOTE_USER"]
+      remote_user
     end
   end
 

@@ -25,6 +25,7 @@ build/
 ## Environment normalization:
 /.bundle/
 /vendor/bundle
+/vendor/
 /lib/bundler/man/
 
 ## Database
