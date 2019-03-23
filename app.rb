@@ -105,7 +105,7 @@ helpers do
 
   def ishide(folder)
     names = folder.tags.pluck(:name)
-    hidetags.any{ |t| names.include? t }
+    hidetags.any? { |t| names.include? t }
   end
 
   def create_account
