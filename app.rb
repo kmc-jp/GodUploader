@@ -104,17 +104,8 @@ helpers do
   end
 
   def ishide(folder)
-
-    flag = false
-
-    hidetags.each do |t|
-      if folder.tags.exists?( :name => t ) then
-        flag = true
-      end
-    end
-
-    flag
-
+    names = folder.tags.pluck(:name)
+    hidetags.any{ |t| names.include? t }
   end
 
   def create_account
