@@ -95,9 +95,9 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <% @accounts.select{ |a| a.folders.count > 0 }.sort_by{ |a| a.folders.count * -1 }.each do |a| %>
+          <% @accounts.includes(:folders).select{ |a| a.folders.size > 0 }.sort_by{ |a| a.folders.size * -1 }.each do |a| %>
             <div class="col-md-3">
-              <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.folders.count%>)</a>
+              <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.folders.size%>)</a>
             </div>
           <% end %>
         </div>
