@@ -204,7 +204,7 @@ get '/searchbytag/:tagid' do
 end
 
 get '/tags' do
-  @tags = Tag.all
+  @tags = Tag.all.includes(:folders)
   erb :tags
 end
 
