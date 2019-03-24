@@ -16,7 +16,7 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="row"> 
-        <% @user.folders.joins(:illusts).order( "created_at DESC" ).uniq.each do |i| %>
+        <% @user.folders.includes(:illusts).includes(:tags).order( "created_at DESC" ).uniq.each do |i| %>
           <div class="col-md-3">
               <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail" style="height:<%= thumbheight %>;">
                 <% if ishide(i) then %>
