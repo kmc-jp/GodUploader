@@ -104,17 +104,8 @@ helpers do
   end
 
   def ishide(folder)
-
-    flag = false
-
-    hidetags.each do |t|
-      if folder.tags.exists?( :name => t ) then
-        flag = true
-      end
-    end
-
-    flag
-
+    names = folder.tags.pluck(:name)
+    hidetags.any? { |t| names.include? t }
   end
 
   def create_account
@@ -449,7 +440,7 @@ get '/' do
 
   @accounts = Account.all
   
-  @newerillusts = Folder.joins(:illusts).order( "created_at DESC" ).select{ |f| !ishide(f) }.uniq.slice(0,8)
+  @newerillusts = Folder.joins(:illusts).includes(:tags).order( "created_at DESC" ).select{ |f| !ishide(f) }.uniq.slice(0,8)
   a = user
   @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
 
