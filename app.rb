@@ -196,7 +196,7 @@ get '/searchbytag/:tagid' do
   
   create_account
 
-  @tag = Tag.find_by_id( params[:tagid] )
+  @tag = Tag.includes(:folders).find_by_id( params[:tagid] )
   @folders = @tag.folders
 
   erb :searchbytag
