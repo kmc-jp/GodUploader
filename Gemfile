@@ -11,7 +11,7 @@ gem 'rake'
 gem 'erubis'
 gem 'twitter'
 gem 'slack-api'
-gem 'gyazo'
+gem 'gyazo', '>= 3.0'
 
 group :production do
   gem 'sqlite3', '~> 1.3.6'
