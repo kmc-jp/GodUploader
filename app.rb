@@ -281,11 +281,11 @@ post '/uploadillust' do
            
             if params[:isgyazo] then
 
-              gyazo = Gyazo::Client.new ENV['gyazo_token']
+              gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
               gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
-              res = gyazo.upload gyazo_path , { :url => 'https://inside.kmc.gr.jp/godillustuploader/users/' + kmcid , :title => "GodIllustUploader " + user.name  }
+              res = gyazo.upload imagefile: gyazo_path, referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}", title: "GodIllustUploader #{user.name}"
 
-              folder.outurl = res[ 'url' ]
+              folder.outurl = res[:url]
               folder.save
         
             end
