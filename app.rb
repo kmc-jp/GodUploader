@@ -459,3 +459,21 @@ get '/' do
   erb :index
 
 end
+
+#==============最新の絵==========================
+get '/new/:page' do
+
+  @display = 16
+  @newerillusts = Folder.joins(:illusts).includes(:tags).order( "created_at DESC" ).select{ |f| !ishide(f) }.uniq.slice((params[:page].to_i) * @display , @display)
+  @max_pages = (((Folder.joins(:illusts).includes(:tags).order( "created_at DESC" ).select{ |f| !ishide(f) }.uniq.length - 1) / @display)).ceil
+  
+  if params[:page].to_i < 5 then
+    @pages = [*((0)..([8, @max_pages].min))]
+  elsif (@max_pages - params[:page].to_i) < 5 then
+    @pages = [*(([0,(@max_pages - 8)].max)..(@max_pages))]
+  else
+    @pages = [*((params[:page].to_i - 4)..([params[:page].to_i + 4, @max_pages].min))].reject{|e| e < 0}
+  end
+  erb :new
+
+end
