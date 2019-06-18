@@ -1,4 +1,4 @@
-class CommentbelongsTofolder < ActiveRecord::Migration
+class CommentbelongsTofolder < ActiveRecord::Migration[4.2]
   def change
   end
 end

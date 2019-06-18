@@ -1,4 +1,4 @@
-class Sessions < ActiveRecord::Migration
+class Sessions < ActiveRecord::Migration[4.2]
   def change
     create_table :sessions do |t|
       t.string :name

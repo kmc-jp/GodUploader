@@ -1,4 +1,4 @@
-class AddcolumnLastlogin < ActiveRecord::Migration
+class AddcolumnLastlogin < ActiveRecord::Migration[4.2]
   def change
     add_column :accounts, :lastlogin,:time
   end
