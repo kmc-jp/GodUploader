@@ -294,15 +294,6 @@ post '/uploadillust' do
                 frame_dir = "#{tmpdir}/frame"
                 mid_gif = "#{tmpdir}/mid.gif"
 
-                Dir.mkdir frame_dir
-                delay = `identify -verbose #{save_path} | grep Delay`
-                        .lines.map {|line| line.sub(/Delay: (\d+)x100/, "\\1").to_i }
-                        .group_by(&:itself)
-                        .transform_values(&:count)
-                        .sort_by {|a, b| a[1] <=> b[1] }
-                        .last.first
-
-                puts "delay: #{delay}"
                 system "convert -coalesce #{save_path} #{mid_gif}"
                 system "convert #{mid_gif} -resize x186 #{outfile}"
               }
