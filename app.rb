@@ -284,7 +284,9 @@ post '/uploadillust' do
           ext = File.extname(save_path)
           outfile = "#{outdir}/#{basename}#{ext}"
 
-          system "convert -resize x186 #{save_path} #{outfile}"
+          # GIFアニメをリサイズすると崩壊する場合があるので1フレーム目だけにしてconvert
+          # GIFアニメじゃなくても[0]で動いた
+          system "convert -resize x186 #{save_path}[0] #{outfile}"
         end
 
         if params[:isslack] then
