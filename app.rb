@@ -438,20 +438,13 @@ get '/' do
 
   create_account
 
-  @accounts = Account.all
+  @active_accounts = Account.all.includes(:folders).select{ |a| a.folders.size > 0 }.sort_by{ |a| a.folders.size * -1 }
   
-  @newerillusts = Folder.joins(:illusts).includes(:tags).order( "created_at DESC" ).select{ |f| !ishide(f) }.uniq.slice(0,8)
+  @newerillusts = Folder.distinct.includes(:illusts).joins(:tags).includes(:account).order( "folders.id DESC" ).where("tags.name not in (#{'?' * hidetags.size})", *hidetags).limit(8)
   a = user
   @newcomments = Comment.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
 
-  @newlikes = []
-  a.folders.each do |f|
-    p f.illusts
-    likes =  f.likes.where( "created_at >= ?" , a.lastlogin ).select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }.uniq
-    if likes.count > 0 then
-      @newlikes.push( [f,likes] )
-    end
-  end
+  @newlikes = Folder.joins(:likes).where("folders.account_id = ? and likes.account_id <> ? and likes.created_at >= ?", a.id, a.id, a.lastlogin).map {|f| [f, f.likes]}
 
   a.lastlogin = Time.now
   a.save
