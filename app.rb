@@ -294,8 +294,13 @@ post '/uploadillust' do
                 frame_dir = "#{tmpdir}/frame"
                 mid_gif = "#{tmpdir}/mid.gif"
 
-                system "convert -coalesce #{save_path} #{mid_gif}"
-                system "convert #{mid_gif} -resize x186 #{outfile}"
+                if `identify ./public/illusts/1472.gif | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
+                  # フレームごとの差分を展開する
+                  system "convert -coalesce #{save_path} #{mid_gif}"
+                  system "convert #{mid_gif} -resize x186 #{outfile}"
+                else
+                  system "convert -resize x186 #{save_path} #{outfile}"
+                end
               }
             }
             # ちょっとだけ待ってほしい！
