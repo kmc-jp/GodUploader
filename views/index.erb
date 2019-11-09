@@ -72,7 +72,7 @@
                 <% if ishide(illust) then %>
                   検閲によりサムネイル表示なし
                 <% else %>
-                  <img style="width:auto;height:<%= thumbnail_image_height %>px;"  src="<%= uri( "./thumbnail/" + illust.illusts.first.filename , false ) %>"  >
+                  <img style="width:auto; max-height:<%= thumbnail_image_height %>px;"  src="<%= uri( "./thumbnail/" + illust.illusts.first.filename , false ) %>"  >
                 <% end %>
                 <div class="caption">
                   <h3><%= illust.title  %></h3>
