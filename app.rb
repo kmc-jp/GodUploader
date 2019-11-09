@@ -304,8 +304,7 @@ post '/uploadillust' do
 
                 puts "delay: #{delay}"
                 system "convert -coalesce #{save_path} #{mid_gif}"
-                system "convert #{mid_gif} -resize x186 #{frame_dir}/%010d.gif"
-                system "convert -loop 0 -delay #{delay} #{frame_dir}/*.gif #{outfile}"
+                system "convert #{mid_gif} -resize x186 #{outfile}"
               }
             }
             # ちょっとだけ待ってほしい！
