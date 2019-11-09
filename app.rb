@@ -280,19 +280,18 @@ post '/uploadillust' do
       f.write illustbin
     end
 
-    # サムネイル生成
-    # RMagickとか使ったほうが丁寧だと思う
-    outdir = './public/thumbnail'
-    basename = File.basename(save_path).split('.').first
-    ext = File.extname(save_path)
-    outfile = "#{outdir}/#{basename}#{ext}"
-
-    # GIFアニメのサムネイル画像を作るためにがんばっている
-    # めちゃくちゃなのでなんとかしたい！！
-    if `identify #{save_path} | wc -l`.chomp.to_i > 1
-      # 重たいと思うのでthread作って逃がす
-      Thread.new {
-        Dir.mktmpdir { |tmpdir|
+    # サムネイル生成とSlack共有
+    # 時間かかるのでthreadに逃がす
+    Thread.new do
+      # サムネイル生成
+      outdir = './public/thumbnail'
+      basename = File.basename(save_path).split('.').first
+      ext = File.extname(save_path)
+      outfile = "#{outdir}/#{basename}#{ext}"
+      # GIFアニメのサムネイル画像を作るためにがんばっている
+      # めちゃくちゃなのでなんとかしたい！！
+      if `identify #{save_path} | wc -l`.chomp.to_i > 1
+        Dir.mktmpdir do |tmpdir|
           frame_dir = "#{tmpdir}/frame"
           mid_gif = "#{tmpdir}/mid.gif"
 
@@ -303,24 +302,27 @@ post '/uploadillust' do
           else
             system "convert -resize x186 #{save_path} #{outfile}"
           end
-        }
-      }
-      # ちょっとだけ待ってほしい！
-      sleep 2
-    else
-      system "convert -resize x186 #{save_path} #{outfile}"
-    end
-  end
+        end
+      else
+        system "convert -resize x186 #{save_path} #{outfile}"
+      end
 
-  if params[:isslack] && !params[:channel].nil? then
-    if params[:isgyazo] then
-      gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
-      gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
-      res = gyazo.upload imagefile: gyazo_path, referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}", title: "GodIllustUploader #{user.name}"
-      folder.outurl = res[:url]
-      folder.save
+      # Slack共有
+      if params[:isslack] && !params[:channel].nil? then
+        if params[:isgyazo] then
+          gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
+          gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
+          res = gyazo.upload(
+            imagefile: gyazo_path,
+            referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}",
+            title: "GodIllustUploader #{user.name}"
+          )
+          folder.outurl = res[:url]
+          folder.save
+        end
+        upload_post( params[:channel] , folder )
+      end
     end
-    upload_post( params[:channel] , folder )
   end
 
   if params[:tegaki] then
