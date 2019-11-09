@@ -9,6 +9,7 @@
 /test/version_tmp/
 /tmp/
 /public/illusts/*
+/public/thumbnail/
 /spec/examples.txt
 
 ## Specific to RubyMotion:
