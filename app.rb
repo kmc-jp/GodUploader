@@ -294,7 +294,7 @@ post '/uploadillust' do
                 frame_dir = "#{tmpdir}/frame"
                 mid_gif = "#{tmpdir}/mid.gif"
 
-                File.mkdir frame_dir
+                Dir.mkdir frame_dir
 
                 system "convert -coalesce #{save_path} #{mid_gif}"
                 system "convert #{mid_gif} -resize x186 #{frame_dir}/%010d.gif"
