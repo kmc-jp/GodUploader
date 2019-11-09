@@ -1,4 +1,4 @@
-class CreatetableFoldersTags < ActiveRecord::Migration
+class CreatetableFoldersTags < ActiveRecord::Migration[4.2]
   def change
 
     create_table :folderstags do |t|

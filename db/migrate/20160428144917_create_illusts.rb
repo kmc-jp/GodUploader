@@ -1,4 +1,4 @@
-class CreateIllusts < ActiveRecord::Migration
+class CreateIllusts < ActiveRecord::Migration[4.2]
   def change
     create_table :illusts do |t|
       t.string :title
