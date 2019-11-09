@@ -241,98 +241,88 @@ post '/like' do
 end
 
 post '/uploadillust' do
-  
+  # アップロードしたいイラストが来てないのはリクエストがおかしいので400を返す
+  return 400 unless params[:illusts]
+
   folder = user.folders.build( title:params[:title] , caption:params[:caption] )
-  if params[:illusts]
-    
-      if folder.save 
 
-        params[:tags].split(',').each do |t|
-          if !folder.tags.exists?( :name => t ) then
-            if Tag.exists?( :name => t ) then
-              folder.tags << Tag.find_by_name(t)
-            else
-              folder.tags.create( name:t )
-            end
-          end
-        end
+  # フォルダ作れないのはなんかこっちがおかしい気がするので500
+  return 500 unless folder.save
 
-        params[:illusts].each do |buf|
-          illust = folder.illusts.create
+  params[:tags].split(',').each do |t|
+    if !folder.tags.exists?( :name => t ) then
+      if Tag.exists?( :name => t ) then
+        folder.tags << Tag.find_by_name(t)
+      else
+        folder.tags.create( name:t )
+      end
+    end
+  end
 
-          if params[:tegaki] then
-            illust.filename = illust.id.to_s + ".png"
-          else 
-            illust.filename = illust.id.to_s + "." + buf[:filename].split('.').last
-          end
-          illust.save       
+  params[:illusts].each do |buf|
+    illust = folder.illusts.create
 
-          if !File.exists?( 'public/illusts' )
-            Dir.mkdir( 'public/illusts' )
-          end
+    if params[:tegaki] then
+      illust.filename = illust.id.to_s + ".png"
+    else 
+      illust.filename = illust.id.to_s + "." + buf[:filename].split('.').last
+    end
+    illust.save
 
-          save_path = "./public/illusts/" + illust.filename
+    if !File.exists?( 'public/illusts' )
+      Dir.mkdir( 'public/illusts' )
+    end
 
-          illustbin = buf[:tempfile].read
-          File.open( save_path , 'wb' ) do |f|
-            f.write illustbin
-          end
+    save_path = "./public/illusts/" + illust.filename
 
-          # サムネイル生成
-          # RMagickとか使ったほうが丁寧だと思う
-          outdir = './public/thumbnail'
-          basename = File.basename(save_path).split('.').first
-          ext = File.extname(save_path)
-          outfile = "#{outdir}/#{basename}#{ext}"
+    illustbin = buf[:tempfile].read
+    File.open( save_path , 'wb' ) do |f|
+      f.write illustbin
+    end
 
-          # GIFアニメのサムネイル画像を作るためにがんばっている
-          # めちゃくちゃなのでなんとかしたい！！
-          if `identify #{save_path} | wc -l`.chomp.to_i > 1
-            # 重たいと思うのでthread作って逃がす
-            Thread.new {
-              Dir.mktmpdir {|tmpdir|
-                frame_dir = "#{tmpdir}/frame"
-                mid_gif = "#{tmpdir}/mid.gif"
+    # サムネイル生成
+    # RMagickとか使ったほうが丁寧だと思う
+    outdir = './public/thumbnail'
+    basename = File.basename(save_path).split('.').first
+    ext = File.extname(save_path)
+    outfile = "#{outdir}/#{basename}#{ext}"
 
-                if `identify ./public/illusts/1472.gif | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
-                  # フレームごとの差分を展開する
-                  system "convert -coalesce #{save_path} #{mid_gif}"
-                  system "convert #{mid_gif} -resize x186 #{outfile}"
-                else
-                  system "convert -resize x186 #{save_path} #{outfile}"
-                end
-              }
-            }
-            # ちょっとだけ待ってほしい！
-            sleep 2
+    # GIFアニメのサムネイル画像を作るためにがんばっている
+    # めちゃくちゃなのでなんとかしたい！！
+    if `identify #{save_path} | wc -l`.chomp.to_i > 1
+      # 重たいと思うのでthread作って逃がす
+      Thread.new {
+        Dir.mktmpdir { |tmpdir|
+          frame_dir = "#{tmpdir}/frame"
+          mid_gif = "#{tmpdir}/mid.gif"
+
+          if `identify ./public/illusts/1472.gif | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
+            # フレームごとの差分を展開する
+            system "convert -coalesce #{save_path} #{mid_gif}"
+            system "convert #{mid_gif} -resize x186 #{outfile}"
           else
             system "convert -resize x186 #{save_path} #{outfile}"
           end
-        end
-
-        if params[:isslack] then
-          
-          if params[:channel] != nil then
-           
-            if params[:isgyazo] then
-
-              gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
-              gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
-              res = gyazo.upload imagefile: gyazo_path, referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}", title: "GodIllustUploader #{user.name}"
-
-              folder.outurl = res[:url]
-              folder.save
-        
-            end
-            
-            upload_post( params[:channel] , folder )
-          
-          end
-        
-        end
+        }
+      }
+      # ちょっとだけ待ってほしい！
+      sleep 2
+    else
+      system "convert -resize x186 #{save_path} #{outfile}"
     end
-  end  
-  
+  end
+
+  if params[:isslack] && !params[:channel].nil? then
+    if params[:isgyazo] then
+      gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
+      gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
+      res = gyazo.upload imagefile: gyazo_path, referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}", title: "GodIllustUploader #{user.name}"
+      folder.outurl = res[:url]
+      folder.save
+    end
+    upload_post( params[:channel] , folder )
+  end
+
   if params[:tegaki] then
     content_type :json
     data = { redirect: uri( "/illust/" + folder.id.to_s , false ) }
@@ -340,7 +330,6 @@ post '/uploadillust' do
   else 
     redirect uri( "/illust/" + folder.id.to_s , false )
   end
-
 end
 
 post '/deleteillust/:id' do
