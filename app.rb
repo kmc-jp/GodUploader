@@ -277,6 +277,14 @@ post '/uploadillust' do
             f.write illustbin
           end
 
+          # サムネイル生成
+          # RMagickとか使ったほうが丁寧だと思う
+          outdir = './public/thumbnail'
+          basename = File.basename(save_path).split('.').first
+          ext = File.extname(save_path)
+          outfile = "#{outdir}/#{basename}#{ext}"
+
+          system "convert -resize x186 #{save_path} #{outfile}"
         end
 
         if params[:isslack] then
