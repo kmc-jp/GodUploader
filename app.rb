@@ -300,8 +300,9 @@ post '/uploadillust' do
                         .group_by(&:itself)
                         .transform_values(&:count)
                         .sort_by {|a, b| a[1] <=> b[1] }
-                        .first.first
+                        .last.first
 
+                puts "delay: #{delay}"
                 system "convert -coalesce #{save_path} #{mid_gif}"
                 system "convert #{mid_gif} -resize x186 #{frame_dir}/%010d.gif"
                 system "convert -loop 0 -delay #{delay} #{frame_dir}/*.gif #{outfile}"
