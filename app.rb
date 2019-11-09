@@ -298,13 +298,13 @@ post '/uploadillust' do
           if `identify ./public/illusts/1472.gif | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
             # フレームごとの差分を展開する
             system "convert -coalesce #{save_path} #{mid_gif}"
-            system "convert #{mid_gif} -resize x186 #{outfile}"
+            system "convert #{mid_gif} -resize x#{thumbnail_image_height} #{outfile}"
           else
-            system "convert -resize x186 #{save_path} #{outfile}"
+            system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
           end
         end
       else
-        system "convert -resize x186 #{save_path} #{outfile}"
+        system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
       end
 
       # Slack共有
