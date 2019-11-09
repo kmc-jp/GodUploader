@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'fileutils'
-require 'tmpdir'
 require 'active_record'
 require "sinatra/reloader"
 require 'json'
@@ -291,17 +290,11 @@ post '/uploadillust' do
       # GIFアニメのサムネイル画像を作るためにがんばっている
       # めちゃくちゃなのでなんとかしたい！！
       if `identify #{save_path} | wc -l`.chomp.to_i > 1
-        Dir.mktmpdir do |tmpdir|
-          frame_dir = "#{tmpdir}/frame"
-          mid_gif = "#{tmpdir}/mid.gif"
-
-          if `identify ./public/illusts/1472.gif | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
-            # フレームごとの差分を展開する
-            system "convert -coalesce #{save_path} #{mid_gif}"
-            system "convert #{mid_gif} -resize x#{thumbnail_image_height} #{outfile}"
-          else
-            system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
-          end
+        if `identify #{save_path} | cut -d' ' -f3 | sort | uniq | wc -l`.to_i > 1
+          # フレームごとの差分を展開する
+          system "convert #{save_path} -coalesce -resize x#{thumbnail_image_height} -layers optimize #{outfile}"
+        else
+          system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
         end
       else
         system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
