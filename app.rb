@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'fileutils'
+require 'tmpdir'
 require 'active_record'
 require "sinatra/reloader"
 require 'json'
@@ -284,9 +285,27 @@ post '/uploadillust' do
           ext = File.extname(save_path)
           outfile = "#{outdir}/#{basename}#{ext}"
 
-          # GIFアニメをリサイズすると崩壊する場合があるので1フレーム目だけにしてconvert
-          # GIFアニメじゃなくても[0]で動いた
-          system "convert -resize x186 #{save_path}[0] #{outfile}"
+          # GIFアニメのサムネイル画像を作るためにがんばっている
+          # めちゃくちゃなのでなんとかしたい！！
+          if `identify #{save_path} | wc -l`.chomp.to_i > 1
+            # 重たいと思うのでthread作って逃がす
+            Thread.new {
+              Dir.mktmpdir {|tmpdir|
+                frame_dir = "#{tmpdir}/frame"
+                mid_gif = "#{tmpdir}/mid.gif"
+
+                File.mkdir frame_dir
+
+                system "convert -coalesce #{save_path} #{mid_gif}"
+                system "convert #{mid_gif} -resize x186 #{frame_dir}/%010d.gif"
+                system "convert -loop 1 -delay 5 #{frame_dir}/*.gif #{outfile}"
+              }
+            }
+            # ちょっとだけ待ってほしい！
+            sleep 2
+          else
+            system "convert -resize x186 #{save_path} #{outfile}"
+          end
         end
 
         if params[:isslack] then
