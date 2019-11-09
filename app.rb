@@ -311,7 +311,7 @@ post '/uploadillust' do
       if params[:isslack] && !params[:channel].nil? then
         if params[:isgyazo] then
           gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
-          gyazo_path = "./public/illusts/" + folder.illusts.first.filename;  
+          gyazo_path = "./public/thumbnail/" + folder.illusts.first.filename;  
           res = gyazo.upload(
             imagefile: gyazo_path,
             referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}",
