@@ -129,6 +129,10 @@ helpers do
     "320px"
   end
 
+  def thumbnail_image_height
+    186
+  end
+
   def upload_post( channel , folder )
 
     tags = []
