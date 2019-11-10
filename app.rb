@@ -23,6 +23,7 @@ ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
   database: 'god.db'
 )
+ActiveRecord::Base.logger = Logger.new STDOUT
 
 configure do
   use Rack::Session::Cookie,
@@ -459,9 +460,11 @@ get '/' do
                         .order("id DESC")
                         .limit(8)
   a = user
-  @newcomments = Comment.where( "created_at >= ?" , a.lastlogin )
-                        .select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }
-                        .uniq
+  @newcomments = Comment.distinct
+                        .joins(:account)
+                        .joins(:folder)
+                        .joins('inner join accounts a2 on folders.account_id = a2.id')
+                        .where("accounts.id <> ? and a2.id = ? and comments.created_at >= ?" , a.id, a.id, a.lastlogin)
 
   @newlikes = Folder.joins(:likes)
                     .where("folders.account_id = ? and likes.account_id <> ? and likes.created_at >= ?", a.id, a.id, a.lastlogin)
