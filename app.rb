@@ -444,12 +444,10 @@ get '/' do
                             .sort_by{ |a| a.folders.size * -1 }
   
   @newerillusts = Folder.distinct
-                        .includes(:illusts)
-                        .joins(:tags)
-                        .includes(:account)
-                        .order("folders.id DESC")
-                        .where("tags.name not in (#{'?' * hidetags.size})", *hidetags)
-                        .limit(8)
+                        .joins(:illusts)
+                        .includes(:tags)
+                        .order( "id DESC" )
+                        .reject{ |f| ishide(f) }.slice(0,8)
   a = user
   @newcomments = Comment.where( "created_at >= ?" , a.lastlogin )
                         .select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }
