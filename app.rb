@@ -442,12 +442,22 @@ get '/' do
                             .includes(:folders)
                             .select{ |a| a.folders.size > 0 }
                             .sort_by{ |a| a.folders.size * -1 }
-  
+
+  hidetags_repr = hidetags.map {|t| '"' + t + '"'}.join ','
   @newerillusts = Folder.distinct
-                        .joins(:illusts)
-                        .includes(:tags)
-                        .order( "id DESC" )
-                        .reject{ |f| ishide(f) }.slice(0,8)
+                        .includes(:illusts)
+                        .includes(:account)
+                        .left_joins(:tags)
+                        .joins(%|
+                          inner join tags t
+                          on tags.id is null
+                          or (
+                            tags.id = t.id
+                            and t.name not in (#{hidetags_repr})
+                          )
+                        |)
+                        .order("id DESC")
+                        .limit(8)
   a = user
   @newcomments = Comment.where( "created_at >= ?" , a.lastlogin )
                         .select{ |item| item.account.kmcid != kmcid && item.folder.account.kmcid == kmcid }
