@@ -199,6 +199,8 @@ get '/searchbytag/:tagid' do
 
   @tag = Tag.includes(:folders).find_by_id( params[:tagid] )
   @folders = @tag.folders
+                 .includes(:account, :illusts, :tags)
+                 .order("created_at DESC")
 
   erb :searchbytag
 
