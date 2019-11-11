@@ -23,7 +23,6 @@ ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
   database: 'god.db'
 )
-ActiveRecord::Base.logger = Logger.new STDOUT
 
 configure do
   use Rack::Session::Cookie,
