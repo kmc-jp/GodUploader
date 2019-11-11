@@ -445,19 +445,10 @@ get '/' do
                             .select{ |a| a.folders.size > 0 }
                             .sort_by{ |a| a.folders.size * -1 }
 
-  hidetags_repr = hidetags.map {|t| '"' + t + '"'}.join ','
   @newerillusts = Folder.distinct
-                        .includes(:illusts)
-                        .includes(:account)
+                        .includes(:illusts, :account)
                         .left_joins(:tags)
-                        .joins(%|
-                          inner join tags t
-                          on tags.id is null
-                          or (
-                            tags.id = t.id
-                            and t.name not in (#{hidetags_repr})
-                          )
-                        |)
+                        .where('tags.name is null or tags.name not in (?)', hidetags)
                         .order("id DESC")
                         .limit(8)
   a = user
