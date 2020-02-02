@@ -66,14 +66,10 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-12">
-          <% @newerillusts.sort!{ |a,b|b.created_at <=> a.created_at }.each_with_index do |illust, i| %>
+          <% @newerillusts.each_with_index do |illust, i| %>
             <div class="col-sm-3">
               <a href="<%= uri("./illust/"+illust.id.to_s ,false) %>" class="thumbnail"  style="width:auto;height:<%= thumbheight %>;">
-                <% if ishide(illust) then %>
-                  検閲によりサムネイル表示なし
-                <% else %>
-                  <img style="width:auto;height:60%;"  src="<%= uri( "./illusts/" + illust.illusts.first.filename , false ) %>"  >
-                <% end %>
+                <img style="width:auto;height:60%;"  src="<%= uri( "./illusts/" + illust.illusts.first.filename , false ) %>"  >
                 <div class="caption">
                   <h3><%= illust.title  %></h3>
                   <p><%= illust.account.name %></p>
@@ -95,7 +91,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
-          <% @accounts.includes(:folders).select{ |a| a.folders.size > 0 }.sort_by{ |a| a.folders.size * -1 }.each do |a| %>
+          <% @active_accounts.each do |a| %>
             <div class="col-md-3">
               <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.folders.size%>)</a>
             </div>

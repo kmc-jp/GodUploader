@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,71 +10,72 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614155755) do
+ActiveRecord::Schema.define(version: 2019_11_11_102632) do
 
   create_table "accounts", force: :cascade do |t|
-    t.string   "kmcid"
-    t.string   "name"
+    t.string "kmcid"
+    t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "lastlogin"
+    t.index ["kmcid"], name: "index_accounts_on_kmcid", unique: true
   end
 
   create_table "comments", force: :cascade do |t|
-    t.string   "text"
+    t.string "text"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "account_id"
-    t.integer  "illust_id"
-    t.integer  "folder_id"
+    t.integer "account_id"
+    t.integer "illust_id"
+    t.integer "folder_id"
   end
 
   create_table "folders", force: :cascade do |t|
-    t.string   "title"
-    t.string   "caption"
-    t.string   "outurl"
-    t.integer  "account_id"
+    t.string "title"
+    t.string "caption"
+    t.string "outurl"
+    t.integer "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "folderstags", force: :cascade do |t|
-    t.integer  "folder_id"
-    t.integer  "tag_id"
+    t.integer "folder_id"
+    t.integer "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "illust_tags", force: :cascade do |t|
-    t.integer  "illust_id"
-    t.integer  "tag_id"
+    t.integer "illust_id"
+    t.integer "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "illusts", force: :cascade do |t|
-    t.string   "title"
-    t.string   "caption"
-    t.string   "filename"
+    t.string "title"
+    t.string "caption"
+    t.string "filename"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "account_id"
-    t.integer  "folder_id"
+    t.integer "account_id"
+    t.integer "folder_id"
   end
 
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "account_id"
-    t.integer  "illust_id"
-    t.integer  "folder_id"
+    t.integer "account_id"
+    t.integer "illust_id"
+    t.integer "folder_id"
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name"
+    t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "folder_id"
+    t.integer "folder_id"
   end
 
 end
