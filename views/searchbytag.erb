@@ -6,7 +6,7 @@
     </div>
     <div class="panel-body">
       <div class="row"> 
-        <% @folders.includes(:account, :illusts).order("created_at DESC").each do |i| %>
+        <% @folders.each do |i| %>
           <div class="col-md-3">
             <a href="<%= uri("./illust/"+i.id.to_s ,false) %>" class="thumbnail" style="height:<%= thumbheight %>;" >
               <% if ishide(i) then %>
