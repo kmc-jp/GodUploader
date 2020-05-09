@@ -69,7 +69,7 @@
           <% @newerillusts.each_with_index do |illust, i| %>
             <div class="col-sm-3">
               <a href="<%= uri("./illust/"+illust.id.to_s ,false) %>" class="thumbnail"  style="width:auto;height:<%= thumbheight %>;">
-                <img style="width:auto;height:60%;"  src="<%= uri( "./illusts/" + illust.illusts.first.filename , false ) %>"  >
+                <img style="width:auto; height:<%= thumbnail_image_height %>px; object-fit: contain;"  src="<%= uri( "./thumbnail/" + illust.illusts.first.filename , false ) %>"  >
                 <div class="caption">
                   <h3><%= illust.title  %></h3>
                   <p><%= illust.account.name %></p>
