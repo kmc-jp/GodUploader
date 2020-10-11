@@ -460,7 +460,6 @@ get '/' do
   create_account
 
   @active_accounts = Account.all
-                            .includes(:folders)
                             .select{ |a| a.folders_count > 0 }
                             .sort_by{ |a| a.folders_count * -1 }
 
