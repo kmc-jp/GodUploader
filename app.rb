@@ -250,6 +250,10 @@ post '/uploadillust' do
   # フォルダ作れないのはなんかこっちがおかしい気がするので500
   return 500 unless folder.save
 
+  # フォルダできたので投稿数を増やす
+  user.folders_count += 1
+  user.save
+
   params[:tags].split(',').each do |t|
     if !folder.tags.exists?( :name => t ) then
       if Tag.exists?( :name => t ) then
