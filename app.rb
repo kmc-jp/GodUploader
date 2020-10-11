@@ -461,8 +461,8 @@ get '/' do
 
   @active_accounts = Account.all
                             .includes(:folders)
-                            .select{ |a| a.folders.size > 0 }
-                            .sort_by{ |a| a.folders.size * -1 }
+                            .select{ |a| a.folders_count > 0 }
+                            .sort_by{ |a| a.folders_count * -1 }
 
   @newerillusts = Folder.distinct
                         .includes(:illusts, :account)
