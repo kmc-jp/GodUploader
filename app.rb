@@ -467,7 +467,7 @@ get '/' do
   create_account
 
   @active_accounts = Account.all
-                            .select{ |a| a.folders_count > 0 }
+                            .where('folders_count > 0')
                             .sort_by{ |a| a.folders_count * -1 }
 
   @newerillusts = Folder.distinct
