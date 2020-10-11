@@ -337,6 +337,9 @@ post '/deleteillust/:id' do
 
   if Folder.exists?( :id => params[:id].to_i ) then
     Folder.find_by_id( params[:id].to_i ).destroy
+    # フォルダなくなったので投稿数を減らす
+    user.folders_count -= 1
+    user.save
   end
  
   redirect uri( "/users/" + kmcid , false )
