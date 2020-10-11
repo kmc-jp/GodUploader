@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_11_102632) do
+ActiveRecord::Schema.define(version: 2020_10_11_065435) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "kmcid"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2019_11_11_102632) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "lastlogin"
+    t.integer "folders_count", default: 0, null: false
     t.index ["kmcid"], name: "index_accounts_on_kmcid", unique: true
   end
 
