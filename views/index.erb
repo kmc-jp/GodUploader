@@ -93,7 +93,7 @@
         <div class="col-md-12">
           <% @active_accounts.each do |a| %>
             <div class="col-md-3">
-              <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.folders.size%>)</a>
+              <a href="<%= uri( 'users/' + a.kmcid ,false ) %>" type="button" class="btn btn-default center-block" ><%= a.name %>(<%=a.folders_count%>)</a>
             </div>
           <% end %>
         </div>

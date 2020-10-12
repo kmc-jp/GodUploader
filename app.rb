@@ -246,9 +246,14 @@ post '/uploadillust' do
   return 400 unless params[:illusts]
 
   folder = user.folders.build( title:params[:title] , caption:params[:caption] )
-
+  
   # フォルダ作れないのはなんかこっちがおかしい気がするので500
   return 500 unless folder.save
+  
+  # フォルダできたので投稿数を増やす
+  current_user = user
+  current_user.folders_count += 1
+  current_user.save
 
   params[:tags].split(',').each do |t|
     if !folder.tags.exists?( :name => t ) then
@@ -333,6 +338,10 @@ post '/deleteillust/:id' do
 
   if Folder.exists?( :id => params[:id].to_i ) then
     Folder.find_by_id( params[:id].to_i ).destroy
+    # フォルダなくなったので投稿数を減らす
+    current_user = user
+    current_user.folders_count -= 1
+    current_user.save
   end
  
   redirect uri( "/users/" + kmcid , false )
@@ -460,9 +469,8 @@ get '/' do
   create_account
 
   @active_accounts = Account.all
-                            .includes(:folders)
-                            .select{ |a| a.folders.size > 0 }
-                            .sort_by{ |a| a.folders.size * -1 }
+                            .where('folders_count > 0')
+                            .order('folders_count DESC')
 
   @newerillusts = Folder.distinct
                         .includes(:illusts, :account)
