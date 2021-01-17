@@ -265,8 +265,6 @@ post '/uploadillust' do
     end
   end
 
-  posted_to_slack = false
-
   params[:illusts].each do |buf|
     illust = folder.illusts.create
 
@@ -287,11 +285,14 @@ post '/uploadillust' do
     File.open( save_path , 'wb' ) do |f|
       f.write illustbin
     end
+  end
 
-    # サムネイル生成とSlack共有
-    # 時間かかるのでthreadに逃がす
-    Thread.new do
-      # サムネイル生成
+  # サムネイル生成とSlack共有
+  # 時間かかるのでthreadに逃がす
+  Thread.new do
+    # サムネイル生成
+    Folder.illusts.each do |illust|
+      save_path = "./public/illusts/" + illust.filename
       outdir = './public/thumbnail'
       basename = File.basename(save_path).split('.').first
       ext = File.extname(save_path)
@@ -308,23 +309,22 @@ post '/uploadillust' do
       else
         system "convert -resize x#{thumbnail_image_height} #{save_path} #{outfile}"
       end
+    end
 
-      # Slack共有
-      if params[:isslack] && !params[:channel].nil? && !posted_to_slack then
-        if params[:isgyazo] then
-          gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
-          gyazo_path = "./public/thumbnail/" + folder.illusts.first.filename;  
-          res = gyazo.upload(
-            imagefile: gyazo_path,
-            referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}",
-            title: "GodIllustUploader #{user.name}"
-          )
-          folder.outurl = res[:url]
-          folder.save
-        end
-        upload_post( params[:channel] , folder )
-        posted_to_slack = true
+    # Slack共有
+    if params[:isslack] && !params[:channel].nil? then
+      if params[:isgyazo] then
+        gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
+        gyazo_path = "./public/thumbnail/" + folder.illusts.first.filename;  
+        res = gyazo.upload(
+          imagefile: gyazo_path,
+          referer_url: "https://inside.kmc.gr.jp/godillustuploader/users/#{kmcid}",
+          title: "GodIllustUploader #{user.name}"
+        )
+        folder.outurl = res[:url]
+        folder.save
       end
+      upload_post( params[:channel] , folder )
     end
   end
 
