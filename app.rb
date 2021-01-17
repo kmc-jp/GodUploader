@@ -291,7 +291,7 @@ post '/uploadillust' do
   # 時間かかるのでthreadに逃がす
   Thread.new do
     # サムネイル生成
-    Folder.illusts.each do |illust|
+    folder.illusts.each do |illust|
       save_path = "./public/illusts/" + illust.filename
       outdir = './public/thumbnail'
       basename = File.basename(save_path).split('.').first
