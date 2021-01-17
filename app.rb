@@ -265,6 +265,8 @@ post '/uploadillust' do
     end
   end
 
+  posted_to_slack = false
+
   params[:illusts].each do |buf|
     illust = folder.illusts.create
 
@@ -308,7 +310,7 @@ post '/uploadillust' do
       end
 
       # Slack共有
-      if params[:isslack] && !params[:channel].nil? then
+      if params[:isslack] && !params[:channel].nil? && !posted_to_slack then
         if params[:isgyazo] then
           gyazo = Gyazo::Client.new access_token: ENV['gyazo_token']
           gyazo_path = "./public/thumbnail/" + folder.illusts.first.filename;  
@@ -321,6 +323,7 @@ post '/uploadillust' do
           folder.save
         end
         upload_post( params[:channel] , folder )
+        posted_to_slack = true
       end
     end
   end
