@@ -4,3 +4,4 @@ development:
   username: root
 production:
   adapter: sqlite3
+  database: god.db
