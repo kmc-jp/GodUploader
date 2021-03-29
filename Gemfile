@@ -10,7 +10,6 @@ gem 'sinatra-contrib'
 gem 'rake'
 gem 'erubis'
 gem 'twitter'
-gem 'slack-api'
 gem 'gyazo', '>= 3.0'
 
 group :production do
