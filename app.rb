@@ -269,7 +269,7 @@ post '/uploadillust' do
   params[:illusts].each do |buf|
     ext =
       if params[:tegaki]
-        '.png'
+        'png'
       else
         buf[:filename].split('.').last
       end
