@@ -5,6 +5,7 @@ require "sinatra/reloader"
 require 'json'
 require 'net/http'
 require 'gyazo'
+require 'securerandom'
 require './models/illust.rb'
 require './models/illust_tag.rb'
 require './models/account.rb'
@@ -266,14 +267,14 @@ post '/uploadillust' do
   end
 
   params[:illusts].each do |buf|
-    illust = folder.illusts.create
-
-    if params[:tegaki] then
-      illust.filename = illust.id.to_s + ".png"
-    else 
-      illust.filename = illust.id.to_s + "." + buf[:filename].split('.').last
-    end
-    illust.save
+    ext =
+      if params[:tegaki]
+        'png'
+      else
+        buf[:filename].split('.').last
+      end
+    filename = "#{SecureRandom.uuid}.#{ext}"
+    illust = folder.illusts.create(filename: filename)
 
     if !File.exists?( 'public/illusts' )
       Dir.mkdir( 'public/illusts' )
