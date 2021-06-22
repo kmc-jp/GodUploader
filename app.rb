@@ -202,6 +202,8 @@ get '/searchbytag/:tagid' do
   create_account
 
   @tag = Tag.includes(:folders).find_by_id( params[:tagid] )
+  return 404 unless @tag
+
   @folders = @tag.folders
                  .includes(:account, :illusts, :tags)
                  .order("created_at DESC")
