@@ -204,6 +204,8 @@ get '/searchbytag/:tagid' do
   create_account
 
   @tag = Tag.includes(:folders).find_by_id( params[:tagid] )
+  return 404 unless @tag
+
   @folders = @tag.folders
                  .includes(:account, :illusts, :tags)
                  .order("created_at DESC")
@@ -258,7 +260,9 @@ post '/uploadillust' do
   current_user.folders_count += 1
   current_user.save
 
-  params[:tags].split(',').each do |t|
+  tags = params[:tags].split(',').map(&:strip).reject(&:empty?)
+
+  tags.each do |t|
     if !folder.tags.exists?( :name => t ) then
       if Tag.exists?( :name => t ) then
         folder.tags << Tag.find_by_name(t)
