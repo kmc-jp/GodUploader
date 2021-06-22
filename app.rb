@@ -5,6 +5,7 @@ require "sinatra/reloader"
 require 'json'
 require 'net/http'
 require 'gyazo'
+require 'rack/turnout'
 require 'securerandom'
 require './models/illust.rb'
 require './models/illust_tag.rb'
@@ -26,6 +27,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 configure do
+  use Rack::Turnout
   use Rack::Session::Cookie,
   # :key => 'rack.session',
   # :domain => 'takumakei.blogspot.com',

@@ -11,6 +11,7 @@ gem 'rake'
 gem 'erubis'
 gem 'twitter'
 gem 'gyazo', '>= 3.0'
+gem 'turnout'
 
 group :production do
   gem 'sqlite3', '~> 1.3.6'
