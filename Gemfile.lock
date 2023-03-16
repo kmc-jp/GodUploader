@@ -50,7 +50,7 @@ GEM
     mustermann (1.0.3)
     naught (1.1.0)
     public_suffix (3.0.3)
-    rack (2.2.3)
+    rack (2.2.6.4)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-protection (2.0.5)
